@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 import java.util.*;
 
 @RestController
@@ -49,8 +44,6 @@ public class DistrictingController {
         return stateRepository.findById(id);
     }
 
-
-
     @GetMapping("/states/{id}/jobs")
     public List<Job> getJobs(@PathVariable long id) {
 
@@ -76,19 +69,10 @@ public class DistrictingController {
         return districtingRepository.findAllByJobId(id);
     }
 
-
-
     @GetMapping("/incumbents/{stateId}")
     public List<Map<String, Object>> getIncumbents(@PathVariable int stateId) {
 
-        Map<String, String> params = new HashMap<>();
-        params.put("id", String.valueOf(stateId));
-
         return null;
-
-//        return jdbcTemplate.queryForList("select * from incumbents i\n" +
-//                "inner join states s on i.state_id = s.id \n" +
-//                "where s.id = (:id)", params);
     }
 
     @GetMapping("/getConstraintCountIncumbent")
