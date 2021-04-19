@@ -7,10 +7,7 @@ import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingReposit
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.JobRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -133,4 +130,10 @@ public class DistrictingController {
         return null;
     }
 
+
+    @PostMapping("/setConstraints")
+    public String setConstraints(@RequestBody Map<String, String> body){
+        System.out.println(body);
+        return body.keySet().toString();
+    }
 }
