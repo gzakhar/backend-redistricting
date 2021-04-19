@@ -132,8 +132,7 @@ public class DistrictingController {
 
 
     @PostMapping("/setConstraints")
-    public String setConstraints(@RequestBody Map<String, String> body){
-        System.out.println(body);
-        return body.keySet().toString();
+    public String setConstraints(@RequestBody String body){
+        return body;
     }
 }
