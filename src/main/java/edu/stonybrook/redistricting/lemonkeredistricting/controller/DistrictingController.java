@@ -135,4 +135,10 @@ public class DistrictingController {
     public String setConstraints(@RequestBody String body){
         return body;
     }
+
+    @PostMapping("/setMeasures")
+    public String setMeasures(@RequestBody String body){
+        return body;
+    }
+
 }
