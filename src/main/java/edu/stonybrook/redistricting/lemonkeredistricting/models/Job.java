@@ -1,9 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Job {
@@ -15,7 +13,8 @@ public class Job {
     private String seed_file;
     private Integer cooling_period;
     private Integer number_rounds;
-
+    @OneToMany(mappedBy = "job_id")
+    private Collection<Districting> districtings;
 
     public Long getId() {
         return id;
@@ -57,6 +56,14 @@ public class Job {
         this.number_rounds = number_rounds;
     }
 
+    public Collection<Districting> getDistrictings() {
+        return districtings;
+    }
+
+    public void setDistrictings(Collection<Districting> districtings) {
+        this.districtings = districtings;
+    }
+
     @Override
     public String toString() {
         return "Job{" +
@@ -65,6 +72,7 @@ public class Job {
                 ", seed_file='" + seed_file + '\'' +
                 ", cooling_period=" + cooling_period +
                 ", number_rounds=" + number_rounds +
+                ", districtings=" + districtings +
                 '}';
     }
 }

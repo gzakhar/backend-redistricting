@@ -50,6 +50,11 @@ public class DistrictingController {
         return jobRepository.findAllByStateId(id);
     }
 
+    @GetMapping("/jobs/{id}")
+    public Optional<Job> getJob(@PathVariable long id) {
+
+        return jobRepository.findById(id);
+    }
 
     @GetMapping("/districtings/{id}")
     public Optional<Districting> getDistrictingById(@PathVariable long id) {

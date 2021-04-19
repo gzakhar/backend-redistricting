@@ -9,6 +9,7 @@ public class Districting {
     @Id
     private Long id;
     private String geojson;
+    private Long job_id;
 
 
     public Long getId() {
@@ -27,11 +28,20 @@ public class Districting {
         this.geojson = geojson;
     }
 
+    public Long getJob_id() {
+        return job_id;
+    }
+
+    public void setJob_id(Long job_id) {
+        this.job_id = job_id;
+    }
+
     @Override
     public String toString() {
         return "Districting{" +
                 "id=" + id +
                 ", geojson='" + geojson + '\'' +
+                ", job_id=" + job_id +
                 '}';
     }
 }
