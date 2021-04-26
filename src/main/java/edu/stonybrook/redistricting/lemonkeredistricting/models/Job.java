@@ -6,30 +6,37 @@ import java.util.Collection;
 @Entity
 public class Job {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long id;
-    private Long state_id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long jobId;
+    @Column(name = "state_id")
+    private Long stateId;
     private String seed_file;
     private Integer cooling_period;
     private Integer number_rounds;
-    @OneToMany(mappedBy = "job_id")
+    @OneToMany
+    @JoinTable(
+            name = "job_districting_map",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "districting_id")
+    )
     private Collection<Districting> districtings;
 
-    public Long getId() {
-        return id;
+    public Long getJobId() {
+        return jobId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
     }
 
-    public Long getState_id() {
-        return state_id;
+    public Long getStateId() {
+        return stateId;
     }
 
-    public void setState_id(Long state_id) {
-        this.state_id = state_id;
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
     }
 
     public String getSeed_file() {
@@ -67,8 +74,8 @@ public class Job {
     @Override
     public String toString() {
         return "Job{" +
-                "id=" + id +
-                ", state_id=" + state_id +
+                "jobId=" + jobId +
+                ", stateId=" + stateId +
                 ", seed_file='" + seed_file + '\'' +
                 ", cooling_period=" + cooling_period +
                 ", number_rounds=" + number_rounds +

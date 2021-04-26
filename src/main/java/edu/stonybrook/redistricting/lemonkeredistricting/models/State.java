@@ -1,26 +1,30 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import javax.persistence.*;
+import java.util.Collection;
 
-//@Table(name="state")
 @Entity
+@Table(name = "state")
 public class State {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long stateId;
     private String name;
     private Long enacted_districting_id;
     private Double longitude;
     private Double latitude;
     private Double zoom;
+    @OneToMany(mappedBy = "stateId")
+    private Collection<Incumbent> incumbents;
 
-    public Long getId() {
-        return id;
+    public Long getStateId() {
+        return stateId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
     }
 
     public String getName() {
@@ -63,12 +67,24 @@ public class State {
         this.zoom = zoom;
     }
 
+    public Collection<Incumbent> getIncumbents() {
+        return incumbents;
+    }
+
+    public void setIncumbents(Collection<Incumbent> incumbents) {
+        this.incumbents = incumbents;
+    }
+
     @Override
     public String toString() {
         return "State{" +
-                "id=" + id +
+                "stateId=" + stateId +
                 ", name='" + name + '\'' +
                 ", enacted_districting_id=" + enacted_districting_id +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", zoom=" + zoom +
+                ", incumbents=" + incumbents +
                 '}';
     }
 }

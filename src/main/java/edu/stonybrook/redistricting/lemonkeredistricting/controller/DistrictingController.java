@@ -1,9 +1,11 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.Incumbent;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Job;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.State;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.IncumbentRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.JobRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class DistrictingController {
 
     @Autowired
     private DistrictingRepository districtingRepository;
+
+    @Autowired
+    private IncumbentRepository incumbentRepository;
 
     @GetMapping("/test")
     public String home() {
@@ -47,6 +52,18 @@ public class DistrictingController {
         return jobRepository.findAllByStateId(id);
     }
 
+    @GetMapping("/states/{stateId}/incumbents")
+    public Collection<Incumbent> getIncumbents(@PathVariable long stateId) {
+
+        Optional<State> state = stateRepository.findById(stateId);
+
+        if(state.isPresent()){
+            return state.get().getIncumbents();
+        }
+
+        return null;
+    }
+
     @GetMapping("/jobs/{id}")
     public Optional<Job> getJob(@PathVariable long id) {
 
@@ -69,12 +86,6 @@ public class DistrictingController {
     public List<Districting> getDistrictingsByJobId(@PathVariable Long id) {
 
         return districtingRepository.findAllByJobId(id);
-    }
-
-    @GetMapping("/incumbents/{stateId}")
-    public List<Map<String, Object>> getIncumbents(@PathVariable int stateId) {
-
-        return null;
     }
 
     @GetMapping("/getConstraintCountIncumbent")
