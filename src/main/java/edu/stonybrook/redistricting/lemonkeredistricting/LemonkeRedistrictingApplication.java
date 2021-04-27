@@ -12,11 +12,19 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.time.LocalDate;
 
 @SpringBootApplication
+@EnableSwagger2
 public class LemonkeRedistrictingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LemonkeRedistrictingApplication.class, args);
 	}
 
-
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.any())
+                .build();
+    }
 }

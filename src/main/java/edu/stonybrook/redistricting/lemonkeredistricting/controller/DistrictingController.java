@@ -8,9 +8,13 @@ import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingReposit
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.IncumbentRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.JobRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.StateRepository;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @RestController
@@ -41,14 +45,14 @@ public class DistrictingController {
     }
 
     @GetMapping("/states/{id}")
-    public Optional<State> getStateById(@PathVariable long id) {
-
+    public Optional<State> getStateById(HttpSession httpSession, @PathVariable long id) {
+        httpSession.setAttribute("state", id);
         return stateRepository.findById(id);
     }
 
     @GetMapping("/states/{id}/jobs")
-    public List<Job> getJobs(@PathVariable long id) {
-
+    public List<Job> getJobs(HttpSession httpSession, @PathVariable long id) {
+        System.out.println(httpSession.getAttribute("state"));
         return jobRepository.findAllByStateId(id);
     }
 
@@ -57,15 +61,16 @@ public class DistrictingController {
 
         Optional<State> state = stateRepository.findById(stateId);
 
-        if(state.isPresent()){
+        if (state.isPresent()) {
             return state.get().getIncumbents();
         }
 
         return null;
     }
 
+    @ApiOperation(value = "Generate Link Token", notes = "Generate link token for standard flow and for 'Update mode' and 'Micro deposits verifications'")
     @GetMapping("/jobs/{id}")
-    public Optional<Job> getJob(@PathVariable long id) {
+    public Optional<Job> getJob(@ApiParam(value = "Optional parameter, used for 'Update mode' and 'Micro deposits verifications' flows") @PathVariable long id) {
 
         return jobRepository.findById(id);
     }
@@ -79,7 +84,7 @@ public class DistrictingController {
     @GetMapping("/districtings")
     public List<Districting> getDistrictings() {
 
-        return (List<Districting>)districtingRepository.findAll();
+        return (List<Districting>) districtingRepository.findAll();
     }
 
     @GetMapping("/jobs/{id}/districtings")
@@ -143,12 +148,12 @@ public class DistrictingController {
 
 
     @PostMapping("/setConstraints")
-    public String setConstraints(@RequestBody String body){
+    public String setConstraints(@RequestBody String body) {
         return body;
     }
 
     @PostMapping("/setMeasures")
-    public String setMeasures(@RequestBody String body){
+    public String setMeasures(@RequestBody String body) {
         return body;
     }
 
