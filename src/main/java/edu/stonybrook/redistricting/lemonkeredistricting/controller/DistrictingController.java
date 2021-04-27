@@ -1,13 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Incumbent;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Job;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.State;
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.IncumbentRepository;
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.JobRepository;
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.StateRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +19,9 @@ public class DistrictingController {
     private StateRepository stateRepository;
 
     @Autowired
+    private StateSummaryRepository stateSummaryRepository;
+
+    @Autowired
     private JobRepository jobRepository;
 
     @Autowired
@@ -40,7 +37,6 @@ public class DistrictingController {
 
     @GetMapping("/states")
     public List<State> getState() {
-
         return stateRepository.findAll();
     }
 
@@ -50,9 +46,13 @@ public class DistrictingController {
         return stateRepository.findById(id);
     }
 
+    @GetMapping("/state-summaries")
+    public List<StateSummary> getStateSummaries(){
+        return stateSummaryRepository.findAll();
+    }
+
     @GetMapping("/states/{id}/jobs")
     public List<Job> getJobs(HttpSession httpSession, @PathVariable long id) {
-        System.out.println(httpSession.getAttribute("state"));
         return jobRepository.findAllByStateId(id);
     }
 
@@ -99,7 +99,7 @@ public class DistrictingController {
         return null;
     }
 
-    @GetMapping("/getConstraintArrays")
+    @GetMapping("/constraint")
     public Map<String, List<Integer>> getConstraintArrays(int jobId) {
         List<Map<String, List<Integer>>> list = new ArrayList<>();
         Map<String, List<Integer>> map = new HashMap<>();
@@ -111,7 +111,7 @@ public class DistrictingController {
         return map;
     }
 
-    @GetMapping("/getConstrainedData")
+    @GetMapping("/constrainedData")
     public Map<String, Object> getConstrainedData(String[] incumbents,
                                                   String compactnessType,
                                                   double compactnessVal,
@@ -137,24 +137,6 @@ public class DistrictingController {
                                                                 double populationFairness) {
 //      Collection<DistrictingsSummary>
         return null;
-    }
-
-
-    @GetMapping("/getDistricting")
-    public Map<String, Object> getDistricting(int districtingId) {
-//        districting
-        return null;
-    }
-
-
-    @PostMapping("/setConstraints")
-    public String setConstraints(@RequestBody String body) {
-        return body;
-    }
-
-    @PostMapping("/setMeasures")
-    public String setMeasures(@RequestBody String body) {
-        return body;
     }
 
 }
