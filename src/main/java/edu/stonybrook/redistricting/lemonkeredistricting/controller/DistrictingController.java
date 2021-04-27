@@ -68,9 +68,10 @@ public class DistrictingController {
         return null;
     }
 
-    @ApiOperation(value = "Generate Link Token", notes = "Generate link token for standard flow and for 'Update mode' and 'Micro deposits verifications'")
+//    @ApiOperation(value = "Generate Link Token", notes = "Generate link token for standard flow and for 'Update mode' and 'Micro deposits verifications'")
+//    @ApiParam(value = "Optional parameter, used for 'Update mode' and 'Micro deposits verifications' flows")
     @GetMapping("/jobs/{id}")
-    public Optional<Job> getJob(@ApiParam(value = "Optional parameter, used for 'Update mode' and 'Micro deposits verifications' flows") @PathVariable long id) {
+    public Optional<Job> getJob(@PathVariable long id) {
 
         return jobRepository.findById(id);
     }
