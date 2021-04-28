@@ -9,7 +9,7 @@ public class State {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "state_id")
     private Long stateId;
     private String name;
     private Long enacted_districting_id;

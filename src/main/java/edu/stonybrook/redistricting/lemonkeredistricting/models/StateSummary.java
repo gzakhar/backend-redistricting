@@ -8,7 +8,7 @@ import javax.persistence.Id;
 public class StateSummary {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "state_id")
     private Long stateId;
     private String name;
 

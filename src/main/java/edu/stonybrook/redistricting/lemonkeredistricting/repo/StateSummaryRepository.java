@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface StateSummaryRepository extends JpaRepository<StateSummary, Long> {
 
-    @Query(nativeQuery = true, value="SELECT id, name FROM state")
+    @Query(nativeQuery = true, value="SELECT state_id, name FROM state")
     List<StateSummary> findAll();
 }

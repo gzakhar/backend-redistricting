@@ -8,7 +8,7 @@ public class Incumbent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "incumbent_id")
     private Long incumbentId;
     @Column(name = "state_id")
     private Long stateId;

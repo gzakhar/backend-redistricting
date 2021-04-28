@@ -41,14 +41,20 @@ public class DistrictingController {
     }
 
     @GetMapping("/states/{id}")
-    public Optional<State> getStateById(HttpSession httpSession, @PathVariable long id) {
-        httpSession.setAttribute("state", id);
+    public Optional<State> getStateById(@PathVariable long id) {
+
         return stateRepository.findById(id);
     }
 
     @GetMapping("/state-summaries")
-    public List<StateSummary> getStateSummaries(){
+    public List<StateSummary> getStateSummaries() {
         return stateSummaryRepository.findAll();
+    }
+
+    @GetMapping("/set-job/{id}")
+    public void setCurrentJob(HttpSession httpSession, @PathVariable long id) {
+
+        httpSession.setAttribute("currentJob", jobRepository.findById(id));
     }
 
     @GetMapping("/states/{id}/jobs")
@@ -68,8 +74,6 @@ public class DistrictingController {
         return null;
     }
 
-//    @ApiOperation(value = "Generate Link Token", notes = "Generate link token for standard flow and for 'Update mode' and 'Micro deposits verifications'")
-//    @ApiParam(value = "Optional parameter, used for 'Update mode' and 'Micro deposits verifications' flows")
     @GetMapping("/jobs/{id}")
     public Optional<Job> getJob(@PathVariable long id) {
 

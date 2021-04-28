@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface DistrictingRepository extends JpaRepository<Districting, Long> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM Districting d INNER JOIN Job_districting_map jdm ON d.id = jdm.districting_id WHERE jdm.job_id = (:id)")
+    @Query(nativeQuery = true, value = "SELECT * FROM Districting d INNER JOIN Job_districting_map jdm ON d.districting_id = jdm.districting_id WHERE jdm.job_id = (:id)")
     List<Districting> findAllByJobId(@Param("id") long id);
 }

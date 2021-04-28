@@ -1,15 +1,13 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Districting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "districting_id")
     private Long id;
     private String geojson;
 

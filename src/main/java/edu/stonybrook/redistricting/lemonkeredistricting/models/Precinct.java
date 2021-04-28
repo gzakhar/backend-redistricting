@@ -12,7 +12,7 @@ public class Precinct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "precinct_id")
     private Long precinctId;
 //    @Column(name = "geo_json")
 //    @Convert(attributeName = "data", converter = JsonToMapConverter.class)
