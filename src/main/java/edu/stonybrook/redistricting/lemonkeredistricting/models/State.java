@@ -7,18 +7,17 @@ import java.util.Collection;
 @Table(name = "state")
 public class State {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "state_id")
     private Long stateId;
     private String name;
     private Long enacted_districting_id;
     private Double longitude;
     private Double latitude;
     private Double zoom;
-    @OneToMany(mappedBy = "stateId")
     private Collection<Incumbent> incumbents;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "state_id")
     public Long getStateId() {
         return stateId;
     }
@@ -67,6 +66,7 @@ public class State {
         this.zoom = zoom;
     }
 
+    @OneToMany(mappedBy = "stateId")
     public Collection<Incumbent> getIncumbents() {
         return incumbents;
     }

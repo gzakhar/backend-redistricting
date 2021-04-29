@@ -6,22 +6,14 @@ import java.util.Collection;
 @Entity
 public class District {
 
+    private Long districtId;
+    private Long districtingId;
+    private Integer totalPopulation;
+    private Collection<Precinct> precincts;
+
     @Id
     @Column(name = "district_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long districtId;
-    @Column(name = "districting_id")
-    private Long districtingId;
-    @Transient
-    private Integer totalPopulation;
-    @OneToMany
-    @JoinTable(
-            name = "district_precinct_map",
-            joinColumns = @JoinColumn(name = "district_id"),
-            inverseJoinColumns = @JoinColumn(name = "precinct_id")
-    )
-    private Collection<Precinct> precincts;
-
     public Long getDistrictId() {
         return districtId;
     }
@@ -30,6 +22,7 @@ public class District {
         this.districtId = districtId;
     }
 
+    @Column(name = "districting_id")
     public Long getDistrictingId() {
         return districtingId;
     }
@@ -38,28 +31,35 @@ public class District {
         this.districtingId = districtingId;
     }
 
-    public Collection<Precinct> getPrecincts() {
-        return precincts;
-    }
-
-    public void setPrecincts(Collection<Precinct> precincts) {
-        this.precincts = precincts;
-    }
-
     @PostLoad
-    public void setTotalPopulation(){
+    public void setTotalPopulation() {
 
         Integer totalPopulation = 0;
 
-        for(Precinct p: precincts){
+        for (Precinct p : precincts) {
             totalPopulation += p.getTotalPopulation();
         }
 
         this.totalPopulation = totalPopulation;
     }
 
+    @Transient
     public Integer getTotalPopulation() {
         return totalPopulation;
+    }
+
+    @OneToMany
+    @JoinTable(
+            name = "district_precinct_map",
+            joinColumns = @JoinColumn(name = "district_id"),
+            inverseJoinColumns = @JoinColumn(name = "precinct_id")
+    )
+    public Collection<Precinct> getPrecincts() {
+        return precincts;
+    }
+
+    public void setPrecincts(Collection<Precinct> precincts) {
+        this.precincts = precincts;
     }
 
     @Override

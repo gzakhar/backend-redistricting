@@ -6,23 +6,16 @@ import java.util.Collection;
 @Entity
 public class Job {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "job_id")
     private Long jobId;
-    @Column(name = "state_id")
     private Long stateId;
     private String seed_file;
     private Integer cooling_period;
     private Integer number_rounds;
-    @OneToMany
-    @JoinTable(
-            name = "job_districting_map",
-            joinColumns = @JoinColumn(name = "job_id"),
-            inverseJoinColumns = @JoinColumn(name = "districting_id")
-    )
     private Collection<Districting> districtings;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "job_id")
     public Long getJobId() {
         return jobId;
     }
@@ -31,6 +24,7 @@ public class Job {
         this.jobId = jobId;
     }
 
+    @Column(name = "state_id")
     public Long getStateId() {
         return stateId;
     }
@@ -63,6 +57,12 @@ public class Job {
         this.number_rounds = number_rounds;
     }
 
+    @OneToMany
+    @JoinTable(
+            name = "job_districting_map",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "districting_id")
+    )
     public Collection<Districting> getDistrictings() {
         return districtings;
     }

@@ -6,15 +6,14 @@ import javax.persistence.*;
 @Table(name = "incumbent")
 public class Incumbent {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "incumbent_id")
     private Long incumbentId;
-    @Column(name = "state_id")
     private Long stateId;
     private String firstName;
     private String lastName;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "incumbent_id")
     public Long getIncumbentId() {
         return incumbentId;
     }
@@ -23,6 +22,7 @@ public class Incumbent {
         this.incumbentId = incumbentId;
     }
 
+    @Column(name = "state_id")
     public Long getStateId() {
         return stateId;
     }

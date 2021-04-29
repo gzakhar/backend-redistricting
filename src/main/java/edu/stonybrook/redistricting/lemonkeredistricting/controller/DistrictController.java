@@ -1,7 +1,9 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.District;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,21 +14,29 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("lemonke")
+@RequestMapping("/lemonke")
 public class DistrictController {
 
     @Autowired
     private DistrictRepository districtRepository;
 
+    @Autowired
+    private PrecinctRepository precinctRepository;
 
     @GetMapping("/districts")
     public List<District> getAllDistricts(){
         return districtRepository.findAll();
     }
 
-    @GetMapping("/districts/{id}")
-    public Optional<District> getDistrictById(@PathVariable Long id){
-        return districtRepository.findById(id);
+    @GetMapping("/districts/{districtId}")
+    public Optional<District> getDistrictById(@PathVariable Long districtId){
+        return districtRepository.findById(districtId);
+    }
+
+    @GetMapping("/districts/{districtId}/precincts")
+    public List<Precinct> getPrecinctsByDistrictId(@PathVariable Long districtId){
+
+        return precinctRepository.getPrecinctByDistrictId(districtId);
     }
 
 }

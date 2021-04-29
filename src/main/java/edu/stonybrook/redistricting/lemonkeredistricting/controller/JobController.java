@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,15 +31,21 @@ public class JobController {
         return jobRepository.findAll();
     }
 
-    @GetMapping("/jobs/{id}")
-    public Optional<Job> getJobById(@PathVariable long id) {
+    @GetMapping("/jobs/{jobId}")
+    public Optional<Job> getJobById(@PathVariable Long jobId) {
 
-        return jobRepository.findById(id);
+        return jobRepository.findById(jobId);
     }
 
-    @GetMapping("/jobs/{id}/districtings")
-    public List<Districting> getDistrictingsByJobId(@PathVariable Long id) {
+    @GetMapping("/jobs/{jobId}/districtings")
+    public List<Districting> getDistrictingsByJobId(@PathVariable Long jobId) {
 
-        return districtingRepository.findAllByJobId(id);
+        return districtingRepository.findAllByJobId(jobId);
+    }
+
+    @GetMapping("/jobs/{jobId}/set")
+    public void setCurrentJob(HttpSession httpSession, @PathVariable Long jobId) {
+
+        httpSession.setAttribute("currentJob", jobRepository.findById(jobId));
     }
 }

@@ -9,11 +9,11 @@ import javax.persistence.Table;
 @Table(name = "state")
 public class StateSummary {
 
-    @Id
-    @Column(name = "state_id")
     private Long stateId;
     private String name;
 
+    @Id
+    @Column(name = "state_id")
     public Long getStateId() {
         return stateId;
     }

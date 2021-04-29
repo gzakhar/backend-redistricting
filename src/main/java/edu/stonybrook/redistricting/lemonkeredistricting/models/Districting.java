@@ -6,13 +6,12 @@ import java.util.Collection;
 @Entity
 public class Districting {
 
+    private Long districtingId;
+    private Collection<District> districts;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "districting_id")
-    private Long districtingId;
-    @OneToMany(mappedBy = "districtingId")
-    private Collection<District> districts;
-
     public Long getDistrictingId() {
         return districtingId;
     }
@@ -21,6 +20,7 @@ public class Districting {
         this.districtingId = districtingId;
     }
 
+    @OneToMany(mappedBy = "districtingId")
     public Collection<District> getDistricts() {
         return districts;
     }

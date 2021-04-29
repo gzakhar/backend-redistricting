@@ -1,66 +1,39 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import edu.stonybrook.redistricting.lemonkeredistricting.converter.JsonToMapConverter;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @Entity
 @TypeDef(name = "json", typeClass = JsonBinaryType.class)
 public class Precinct {
 
+    private Long precinctId;
+    private Long stateId;
+    private Integer totWhite;
+    private Integer totBlack;
+    private Integer totHisp;
+    private Integer totAsian;
+    private Integer totAIndian;
+    private Integer totOther;
+    private Integer vapWhite;
+    private Integer vapBlack;
+    private Integer vapHisp;
+    private Integer vapAsian;
+    private Integer vapAIndian;
+    private Integer vapOther;
+    private Integer cvapWhite;
+    private Integer cvapBlack;
+    private Integer cvapHisp;
+    private Integer cvapAsian;
+    private Integer cvapAIndian;
+    private Integer cvapOther;
+//    private Map<String, Object> geometry;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "precinct_id")
-    private Long precinctId;
-    @Column(name = "state_id")
-    private Long stateId;
-    @Column(name = "tot_white")
-    private Integer totWhite;
-    @Column(name = "tot_black")
-    private Integer totBlack;
-    @Column(name = "tot_hisp")
-    private Integer totHisp;
-    @Column(name = "tot_asian")
-    private Integer totAsian;
-    @Column(name = "tot_a_indian")
-    private Integer totAIndian;
-    @Column(name = "tot_other")
-    private Integer totOther;
-    @Column(name = "vap_white")
-    private Integer vapWhite;
-    @Column(name = "vap_black")
-    private Integer vapBlack;
-    @Column(name = "vap_hisp")
-    private Integer vapHisp;
-    @Column(name = "vap_asian")
-    private Integer vapAsian;
-    @Column(name = "vap_a_indian")
-    private Integer vapAIndian;
-    @Column(name = "vap_other")
-    private Integer vapOther;
-    @Column(name = "cvap_white")
-    private Integer cvapWhite;
-    @Column(name = "cvap_black")
-    private Integer cvapBlack;
-    @Column(name = "cvap_hisp")
-    private Integer cvapHisp;
-    @Column(name = "cvap_asian")
-    private Integer cvapAsian;
-    @Column(name = "cvap_a_indian")
-    private Integer cvapAIndian;
-    @Column(name = "cvap_other")
-    private Integer cvapOther;
-
-//    @Column(name = "geo_json")
-//    @Type(type = "json")
-//    private Map<String, Object> geometry;
-
     public Long getPrecinctId() {
         return precinctId;
     }
@@ -69,6 +42,7 @@ public class Precinct {
         this.precinctId = precinctId;
     }
 
+    @Column(name = "state_id")
     public Long getStateId() {
         return stateId;
     }
@@ -77,6 +51,7 @@ public class Precinct {
         this.stateId = stateId;
     }
 
+    @Column(name = "tot_white")
     public Integer getTotWhite() {
         return totWhite;
     }
@@ -85,6 +60,7 @@ public class Precinct {
         this.totWhite = totWhite;
     }
 
+    @Column(name = "tot_black")
     public Integer getTotBlack() {
         return totBlack;
     }
@@ -93,6 +69,7 @@ public class Precinct {
         this.totBlack = totBlack;
     }
 
+    @Column(name = "tot_hisp")
     public Integer getTotHisp() {
         return totHisp;
     }
@@ -101,6 +78,7 @@ public class Precinct {
         this.totHisp = totHisp;
     }
 
+    @Column(name = "tot_asian")
     public Integer getTotAsian() {
         return totAsian;
     }
@@ -109,6 +87,7 @@ public class Precinct {
         this.totAsian = totAsian;
     }
 
+    @Column(name = "tot_a_indian")
     public Integer getTotAIndian() {
         return totAIndian;
     }
@@ -117,6 +96,7 @@ public class Precinct {
         this.totAIndian = totAIndian;
     }
 
+    @Column(name = "tot_other")
     public Integer getTotOther() {
         return totOther;
     }
@@ -125,6 +105,7 @@ public class Precinct {
         this.totOther = totOther;
     }
 
+    @Column(name = "vap_white")
     public Integer getVapWhite() {
         return vapWhite;
     }
@@ -133,6 +114,7 @@ public class Precinct {
         this.vapWhite = vapWhite;
     }
 
+    @Column(name = "vap_black")
     public Integer getVapBlack() {
         return vapBlack;
     }
@@ -141,6 +123,7 @@ public class Precinct {
         this.vapBlack = vapBlack;
     }
 
+    @Column(name = "vap_hisp")
     public Integer getVapHisp() {
         return vapHisp;
     }
@@ -149,6 +132,7 @@ public class Precinct {
         this.vapHisp = vapHisp;
     }
 
+    @Column(name = "vap_asian")
     public Integer getVapAsian() {
         return vapAsian;
     }
@@ -157,6 +141,7 @@ public class Precinct {
         this.vapAsian = vapAsian;
     }
 
+    @Column(name = "vap_a_indian")
     public Integer getVapAIndian() {
         return vapAIndian;
     }
@@ -165,6 +150,7 @@ public class Precinct {
         this.vapAIndian = vapAIndian;
     }
 
+    @Column(name = "vap_other")
     public Integer getVapOther() {
         return vapOther;
     }
@@ -173,6 +159,7 @@ public class Precinct {
         this.vapOther = vapOther;
     }
 
+    @Column(name = "cvap_white")
     public Integer getCvapWhite() {
         return cvapWhite;
     }
@@ -181,6 +168,7 @@ public class Precinct {
         this.cvapWhite = cvapWhite;
     }
 
+    @Column(name = "cvap_black")
     public Integer getCvapBlack() {
         return cvapBlack;
     }
@@ -189,6 +177,7 @@ public class Precinct {
         this.cvapBlack = cvapBlack;
     }
 
+    @Column(name = "cvap_hisp")
     public Integer getCvapHisp() {
         return cvapHisp;
     }
@@ -197,6 +186,7 @@ public class Precinct {
         this.cvapHisp = cvapHisp;
     }
 
+    @Column(name = "cvap_asian")
     public Integer getCvapAsian() {
         return cvapAsian;
     }
@@ -205,6 +195,7 @@ public class Precinct {
         this.cvapAsian = cvapAsian;
     }
 
+    @Column(name = "cvap_a_indian")
     public Integer getCvapAIndian() {
         return cvapAIndian;
     }
@@ -213,6 +204,7 @@ public class Precinct {
         this.cvapAIndian = cvapAIndian;
     }
 
+    @Column(name = "cvap_other")
     public Integer getCvapOther() {
         return cvapOther;
     }
@@ -221,10 +213,13 @@ public class Precinct {
         this.cvapOther = cvapOther;
     }
 
-    public Integer getTotalPopulation(){
+    @Transient
+    public Integer getTotalPopulation() {
         return (getTotWhite() + getTotBlack() + getTotHisp() + getTotAsian() + getTotAIndian() + getTotOther());
     }
 
+//    @Column(name = "geo_json")
+//    @Type(type = "json")
 //    public Map<String, Object> getGeometry() {
 //        return geometry;
 //    }
@@ -232,4 +227,30 @@ public class Precinct {
 //    public void setGeometry(Map<String, Object> geometry) {
 //        this.geometry = geometry;
 //    }
+
+    @Override
+    public String toString() {
+        return "Precinct{" +
+                "precinctId=" + precinctId +
+                ", stateId=" + stateId +
+                ", totWhite=" + totWhite +
+                ", totBlack=" + totBlack +
+                ", totHisp=" + totHisp +
+                ", totAsian=" + totAsian +
+                ", totAIndian=" + totAIndian +
+                ", totOther=" + totOther +
+                ", vapWhite=" + vapWhite +
+                ", vapBlack=" + vapBlack +
+                ", vapHisp=" + vapHisp +
+                ", vapAsian=" + vapAsian +
+                ", vapAIndian=" + vapAIndian +
+                ", vapOther=" + vapOther +
+                ", cvapWhite=" + cvapWhite +
+                ", cvapBlack=" + cvapBlack +
+                ", cvapHisp=" + cvapHisp +
+                ", cvapAsian=" + cvapAsian +
+                ", cvapAIndian=" + cvapAIndian +
+                ", cvapOther=" + cvapOther +
+                '}';
+    }
 }

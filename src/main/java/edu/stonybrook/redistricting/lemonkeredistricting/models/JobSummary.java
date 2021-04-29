@@ -6,18 +6,15 @@ import javax.persistence.*;
 @Table(name = "job")
 public class JobSummary {
 
+    private Long jobId;
+    private String name;
+    private Integer numberDistrictings;
+    private Integer coolingPeriod;
+    private Integer numberRounds;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "job_id")
-    private Long jobId;
-    private String name;
-    @Column(name = "number_districtings")
-    private Integer numberDistrictings;
-    @Column(name = "cooling_period")
-    private Integer coolingPeriod;
-    @Column(name = "number_rounds")
-    private Integer numberRounds;
-
     public Long getJobId() {
         return jobId;
     }
@@ -34,6 +31,7 @@ public class JobSummary {
         this.name = name;
     }
 
+    @Column(name = "number_districtings")
     public Integer getNumberDistrictings() {
         return numberDistrictings;
     }
@@ -42,6 +40,7 @@ public class JobSummary {
         this.numberDistrictings = numberDistrictings;
     }
 
+    @Column(name = "cooling_period")
     public Integer getCoolingPeriod() {
         return coolingPeriod;
     }
@@ -50,6 +49,7 @@ public class JobSummary {
         this.coolingPeriod = coolingPeriod;
     }
 
+    @Column(name = "number_rounds")
     public Integer getNumberRounds() {
         return numberRounds;
     }

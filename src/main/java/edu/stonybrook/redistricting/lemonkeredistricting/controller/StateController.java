@@ -34,39 +34,41 @@ public class StateController {
 
     @GetMapping("/states")
     public List<State> getState() {
+
         return stateRepository.findAll();
     }
 
-    @GetMapping("/states/{id}")
-    public Optional<State> getStateById(@PathVariable long id) {
+    @GetMapping("/states/{stateId}")
+    public Optional<State> getStateById(@PathVariable Long stateId) {
 
-        return stateRepository.findById(id);
+        return stateRepository.findById(stateId);
     }
 
-    @GetMapping("/states/{id}/jobs")
-    public List<Job> getJobs(@PathVariable long id) {
-        return jobRepository.findAllByStateId(id);
+    @GetMapping("/states/{stateId}/jobs")
+    public List<Job> getJobs(@PathVariable Long stateId) {
+
+        return jobRepository.findAllByStateId(stateId);
     }
 
     @GetMapping("/states/{stateId}/incumbents")
-    public Collection<Incumbent> getIncumbents(@PathVariable long stateId) {
+    public Collection<Incumbent> getIncumbents(@PathVariable Long stateId) {
 
         Optional<State> state = stateRepository.findById(stateId);
 
         return state.map(State::getIncumbents).orElse(null);
     }
 
-    @GetMapping("/states/{id}/precincts")
-    public List<Precinct> getPrecincts(@PathVariable Long id) {
+    @GetMapping("/states/{stateId}/precincts")
+    public List<Precinct> getPrecincts(@PathVariable Long stateId) {
 
-        return precinctRepository.getPrecinctByStateId(id);
+        return precinctRepository.getPrecinctByStateId(stateId);
     }
-
 
 //      Im testing a way to retrieve enacted geojsons in realtime
 //    @GetMapping("/states/{id}/precincts")
 //    @Cacheable("precincts")
 //    public List<Precinct> getPrecincts(@PathVariable Long id) {
+//
 //        var start = System.currentTimeMillis();
 //        var result = precinctRepository.getPrecinctByStateId(id);
 //        var end = System.currentTimeMillis();
@@ -76,14 +78,15 @@ public class StateController {
 //        return result;
 //    }
 
+    @GetMapping("/states/{stateId}/job-summaries")
+    public List<JobSummary> getJobSummariesByState(@PathVariable Long stateId) {
 
-    @GetMapping("/states/{id}/job-summaries")
-    public List<JobSummary> getJobSummariesByState(@PathVariable Long id) {
-        return jobSummaryRepository.findByStateId(id);
+        return jobSummaryRepository.findByStateId(stateId);
     }
 
     @GetMapping("/state-summaries")
     public List<StateSummary> getStateSummaries() {
+
         return stateSummaryRepository.findAll();
     }
 
