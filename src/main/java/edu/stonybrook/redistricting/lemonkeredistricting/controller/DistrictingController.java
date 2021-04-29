@@ -37,11 +37,19 @@ public class DistrictingController {
     }
 
     @GetMapping("/districtings/{districtingId}/max-mm-districts/{ethnicity}")
-    public Integer getMaxMMDistricts(@PathVariable Long districtingId, @PathVariable Ethnicity ethnicity){
+    public Integer getMaxMMDistricts(@PathVariable Long districtingId, @PathVariable Ethnicity ethnicity) {
 
         Optional<Districting> districting = districtingRepository.findById(districtingId);
 
-        return districting.map(value -> value.getMaxMMDistricts(ethnicity)).orElse(null);
+        return districting.map(d -> d.getMaxMMDistricts(ethnicity)).orElse(null);
+    }
+
+    @GetMapping("/districtings/{districtingId}/population-type-availability")
+    public Map<PopulationType, Boolean> getPopulationTypeAvailability(@PathVariable Long districtingId){
+
+        Optional<Districting> districting = districtingRepository.findById(districtingId);
+
+        return districting.map(Districting::getPopulationTypeAvailablability).orElse(null);
     }
 //    @GetMapping("/getConstraintCountIncumbent")
 //    public List<Map<String, Object>> getConstraintCountIncumbent(int[] incumbents, int jobId) {

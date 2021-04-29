@@ -1,6 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +69,18 @@ public class Districting {
         int totalPopulation = getTotalPopulation(PopulationType.TOTAL_POPULATION);
 
         return (int) (((double) ethnicityPopulation / (double) totalPopulation) * (double) getDistrictingCount());
+    }
+
+    @Transient
+    public Map<PopulationType, Boolean> getPopulationTypeAvailablability() {
+
+        District district = districts.iterator().next();
+        Precinct precinct = district.getPrecincts().iterator().next();
+
+        Map<PopulationType, Boolean> populationAvailability = new HashMap<>();
+        Arrays.stream(PopulationType.values()).forEach(p -> populationAvailability.put(p, precinct.isPopulationTypeAvailable(p)));
+
+        return populationAvailability;
     }
 
     @Override
