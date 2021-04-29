@@ -1,14 +1,26 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import javax.persistence.*;
 import java.util.Collection;
 
+@Entity
 public class District {
 
+    @Id
+    @Column(name = "district_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long districtId;
+    @Column(name = "districting_id")
+    private Long districtingId;
+    @Transient
+    private Integer totalPopulation;
+    @OneToMany
+    @JoinTable(
+            name = "district_precinct_map",
+            joinColumns = @JoinColumn(name = "district_id"),
+            inverseJoinColumns = @JoinColumn(name = "precinct_id")
+    )
     private Collection<Precinct> precincts;
-    private Integer splitCounties;
-    private Collection<Incumbent> incumbents;
-    private Boolean mmDistrict;
 
     public Long getDistrictId() {
         return districtId;
@@ -16,6 +28,14 @@ public class District {
 
     public void setDistrictId(Long districtId) {
         this.districtId = districtId;
+    }
+
+    public Long getDistrictingId() {
+        return districtingId;
+    }
+
+    public void setDistrictingId(Long districtingId) {
+        this.districtingId = districtingId;
     }
 
     public Collection<Precinct> getPrecincts() {
@@ -26,28 +46,20 @@ public class District {
         this.precincts = precincts;
     }
 
-    public Integer getSplitCounties() {
-        return splitCounties;
+    @PostLoad
+    public void setTotalPopulation(){
+
+        Integer totalPopulation = 0;
+
+        for(Precinct p: precincts){
+            totalPopulation += p.getTotalPopulation();
+        }
+
+        this.totalPopulation = totalPopulation;
     }
 
-    public void setSplitCounties(Integer splitCounties) {
-        this.splitCounties = splitCounties;
-    }
-
-    public Collection<Incumbent> getIncumbents() {
-        return incumbents;
-    }
-
-    public void setIncumbents(Collection<Incumbent> incumbents) {
-        this.incumbents = incumbents;
-    }
-
-    public Boolean getMmDistrict() {
-        return mmDistrict;
-    }
-
-    public void setMmDistrict(Boolean mmDistrict) {
-        this.mmDistrict = mmDistrict;
+    public Integer getTotalPopulation() {
+        return totalPopulation;
     }
 
     @Override
@@ -55,9 +67,6 @@ public class District {
         return "District{" +
                 "districtId=" + districtId +
                 ", precincts=" + precincts +
-                ", splitCounties=" + splitCounties +
-                ", incumbents=" + incumbents +
-                ", mmDistrict=" + mmDistrict +
                 '}';
     }
 }

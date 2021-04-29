@@ -3,8 +3,10 @@ package edu.stonybrook.redistricting.lemonkeredistricting.models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "state")
 public class StateSummary {
 
     @Id

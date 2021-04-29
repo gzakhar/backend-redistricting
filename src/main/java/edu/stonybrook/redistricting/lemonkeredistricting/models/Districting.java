@@ -1,6 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Districting {
@@ -8,31 +9,31 @@ public class Districting {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "districting_id")
-    private Long id;
-    private String geojson;
+    private Long districtingId;
+    @OneToMany(mappedBy = "districtingId")
+    private Collection<District> districts;
 
-
-    public Long getId() {
-        return id;
+    public Long getDistrictingId() {
+        return districtingId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setDistrictingId(Long districtingId) {
+        this.districtingId = districtingId;
     }
 
-    public String getGeojson() {
-        return geojson;
+    public Collection<District> getDistricts() {
+        return districts;
     }
 
-    public void setGeojson(String geojson) {
-        this.geojson = geojson;
+    public void setDistricts(Collection<District> districts) {
+        this.districts = districts;
     }
 
     @Override
     public String toString() {
         return "Districting{" +
-                "id=" + id +
-                ", geojson='" + geojson + '\'' +
+                "districtingId=" + districtingId +
+                ", districts=" + districts +
                 '}';
     }
 }

@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.Cacheable;
 
 
 import javax.servlet.http.HttpSession;
@@ -30,54 +31,21 @@ public class DistrictingController {
     @Autowired
     private IncumbentRepository incumbentRepository;
 
+    @Autowired
+    private PrecinctRepository precinctRepository;
+
+    @Autowired
+    private DistrictRepository districtRepository;
+
     @GetMapping("/test")
     public String home() {
         return "Hello World!";
-    }
-
-    @GetMapping("/states")
-    public List<State> getState() {
-        return stateRepository.findAll();
-    }
-
-    @GetMapping("/states/{id}")
-    public Optional<State> getStateById(@PathVariable long id) {
-
-        return stateRepository.findById(id);
-    }
-
-    @GetMapping("/state-summaries")
-    public List<StateSummary> getStateSummaries() {
-        return stateSummaryRepository.findAll();
     }
 
     @GetMapping("/set-job/{id}")
     public void setCurrentJob(HttpSession httpSession, @PathVariable long id) {
 
         httpSession.setAttribute("currentJob", jobRepository.findById(id));
-    }
-
-    @GetMapping("/states/{id}/jobs")
-    public List<Job> getJobs(HttpSession httpSession, @PathVariable long id) {
-        return jobRepository.findAllByStateId(id);
-    }
-
-    @GetMapping("/states/{stateId}/incumbents")
-    public Collection<Incumbent> getIncumbents(@PathVariable long stateId) {
-
-        Optional<State> state = stateRepository.findById(stateId);
-
-        if (state.isPresent()) {
-            return state.get().getIncumbents();
-        }
-
-        return null;
-    }
-
-    @GetMapping("/jobs/{id}")
-    public Optional<Job> getJob(@PathVariable long id) {
-
-        return jobRepository.findById(id);
     }
 
     @GetMapping("/districtings/{id}")
@@ -90,12 +58,6 @@ public class DistrictingController {
     public List<Districting> getDistrictings() {
 
         return (List<Districting>) districtingRepository.findAll();
-    }
-
-    @GetMapping("/jobs/{id}/districtings")
-    public List<Districting> getDistrictingsByJobId(@PathVariable Long id) {
-
-        return districtingRepository.findAllByJobId(id);
     }
 
     @GetMapping("/getConstraintCountIncumbent")
