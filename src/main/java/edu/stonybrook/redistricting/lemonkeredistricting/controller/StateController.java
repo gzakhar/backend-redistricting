@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/lemonke")
 public class StateController {
+
+    @Autowired
+    private DistrictingRepository districtingRepository;
 
     @Autowired
     private JobRepository jobRepository;
@@ -84,9 +88,22 @@ public class StateController {
         return jobSummaryRepository.findByStateId(stateId);
     }
 
-    @GetMapping("/state-summaries")
+    @GetMapping("/states/state-summaries")
     public List<StateSummary> getStateSummaries() {
 
         return stateSummaryRepository.findAll();
     }
+
+    @GetMapping("/states/{stateId}/available-ethnicities")
+    public List<Ethnicity> getAvailableEthnicities(@PathVariable Long stateId) {
+
+        return Arrays.asList(Ethnicity.values());
+    }
+
+//    TODO: implement a maxMMDistricts for a districting (enacted)
+//    @GetMapping("/states/{id}/max-mm-districts")
+//    public List<StateSummary> getMaximumMMDistricts() {
+//
+//
+//    }
 }

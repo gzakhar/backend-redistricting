@@ -10,15 +10,10 @@ public class District {
 
     private Long districtId;
     private Long districtingId;
-    private Integer totalPopulation;
-    private Map<Ethnicity, Boolean> isMajorityMinority;
     private Collection<Precinct> precincts;
 
-    @PostLoad
-    private void setUp() {
-        this.setTotalPopulation();
-        this.setMajorityMinority();
-    }
+    /* calculatable attributes*/
+    private Map<Ethnicity, Integer> ethnicityPopulationMap = new HashMap<>();
 
     @Id
     @Column(name = "district_id")
@@ -40,60 +35,6 @@ public class District {
         this.districtingId = districtingId;
     }
 
-    @Transient
-    public Integer getTotalPopulation() {
-        return totalPopulation;
-    }
-
-    public void setTotalPopulation() {
-
-        Integer totalPopulation = 0;
-
-        for (Precinct p : precincts) {
-            totalPopulation += p.getTotalPopulation();
-        }
-
-        this.totalPopulation = totalPopulation;
-    }
-
-    @Transient
-    public Map<Ethnicity, Boolean> getMajorityMinority() {
-        return isMajorityMinority;
-    }
-
-    public Boolean isMajorityMinority(Ethnicity ethnicity){
-        return this.isMajorityMinority.get(ethnicity);
-    }
-
-    public void setMajorityMinority() {
-
-        int totalPoulation = getTotalPopulation();
-
-        this.isMajorityMinority = new HashMap<>();
-
-        for (Ethnicity e : Ethnicity.values()) {
-
-            int ethnisityPopulation = getEthnicityPopulation(e);
-
-            double percentage = (double) ethnisityPopulation / (double) totalPoulation;
-            System.out.println(percentage);
-
-            this.isMajorityMinority.put(e, percentage >= 0.5);
-        }
-
-    }
-
-    public Integer getEthnicityPopulation(Ethnicity ethnicity) {
-
-        int ethnicityPopulation = 0;
-        for (Precinct p : this.precincts) {
-            ethnicityPopulation += p.getTotalEthnisityPopulation(ethnicity);
-        }
-
-        System.out.println(ethnicityPopulation);
-        return ethnicityPopulation;
-    }
-
     @OneToMany
     @JoinTable(
             name = "district_precinct_map",
@@ -107,6 +48,29 @@ public class District {
     public void setPrecincts(Collection<Precinct> precincts) {
         this.precincts = precincts;
     }
+
+    public Boolean isMajorityMinority(Ethnicity ethnicity) {
+
+        Integer ethnicityPopulation = getPopulation(ethnicity, PopulationType.TOTAL_POPULATION);
+        Integer totalPopulation = getTotalPopulation(PopulationType.TOTAL_POPULATION);
+
+        return ((double) ethnicityPopulation / (double) totalPopulation) >= 0.5;
+    }
+
+    public Integer getPopulation(Ethnicity ethnicity, PopulationType populationType) {
+
+        return this.precincts.stream()
+                .map(p -> p.getPopulation(ethnicity, populationType))
+                .reduce(0, Integer::sum);
+    }
+
+    public Integer getTotalPopulation(PopulationType populationType) {
+
+        return this.precincts.stream()
+                .map(p -> p.getTotalPopulationType(populationType))
+                .reduce(0, Integer::sum);
+    }
+
 
     @Override
     public String toString() {

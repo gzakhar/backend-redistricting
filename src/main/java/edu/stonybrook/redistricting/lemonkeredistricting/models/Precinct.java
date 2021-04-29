@@ -4,6 +4,7 @@ import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @TypeDef(name = "json", typeClass = JsonBinaryType.class)
@@ -31,6 +32,7 @@ public class Precinct {
     private Integer cvapOther;
 //    private Map<String, Object> geometry;
 
+    /* getters and setters*/
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "precinct_id")
@@ -213,26 +215,72 @@ public class Precinct {
         this.cvapOther = cvapOther;
     }
 
-    @Transient
-    public Integer getTotalPopulation() {
-        return (getTotWhite() + getTotBlack() + getTotHisp() + getTotAsian() + getTotAIndian() + getTotOther());
+    public Integer getTotalPopulationType(PopulationType populationType) {
+
+        if (!isPopulationTypeAvailable(populationType))
+            return null;
+
+        return Arrays.stream(Ethnicity.values()).map((ethnicity -> getPopulation(ethnicity, populationType))).reduce(0, Integer::sum);
     }
 
-    public Integer getTotalEthnisityPopulation(Ethnicity ethnicity){
+    public Boolean isPopulationTypeAvailable(PopulationType populationType) {
 
-        switch (ethnicity){
-            case WHITE:
-                return getTotWhite();
-            case BLACK:
-                return getTotBlack();
-            case HISPANIC:
-                return getTotHisp();
-            case ASIAN:
-                return getTotAsian();
-            case AMERICAN_INDIAN:
-                return getTotAIndian();
-            case OTHER:
-                return getTotOther();
+        return Arrays.stream(Ethnicity.values()).noneMatch(ethnicity -> getPopulation(ethnicity, populationType) == null);
+    }
+
+    public Integer getPopulation(Ethnicity ethnicity, PopulationType populationType) {
+        switch (populationType) {
+            case TOTAL_POPULATION:
+                switch (ethnicity) {
+                    case WHITE:
+                        return getTotWhite();
+                    case BLACK:
+                        return getTotBlack();
+                    case HISPANIC:
+                        return getTotHisp();
+                    case ASIAN:
+                        return getTotAsian();
+                    case AMERICAN_INDIAN:
+                        return getTotAIndian();
+                    case OTHER:
+                        return getTotOther();
+                    default:
+                        return null;
+                }
+            case VOTING_AGE_POPULATION:
+                switch (ethnicity) {
+                    case WHITE:
+                        return getVapWhite();
+                    case BLACK:
+                        return getVapBlack();
+                    case HISPANIC:
+                        return getVapHisp();
+                    case ASIAN:
+                        return getVapAsian();
+                    case AMERICAN_INDIAN:
+                        return getVapAIndian();
+                    case OTHER:
+                        return getVapOther();
+                    default:
+                        return null;
+                }
+            case CITIZEN_VOTING_AGE_POPULATION:
+                switch (ethnicity) {
+                    case WHITE:
+                        return getCvapWhite();
+                    case BLACK:
+                        return getCvapBlack();
+                    case HISPANIC:
+                        return getCvapHisp();
+                    case ASIAN:
+                        return getCvapAsian();
+                    case AMERICAN_INDIAN:
+                        return getCvapAIndian();
+                    case OTHER:
+                        return getCvapOther();
+                    default:
+                        return null;
+                }
             default:
                 return null;
         }
