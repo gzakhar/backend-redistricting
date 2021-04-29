@@ -3,10 +3,7 @@ package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
@@ -98,6 +95,18 @@ public class StateController {
     public List<Ethnicity> getAvailableEthnicities(@PathVariable Long stateId) {
 
         return Arrays.asList(Ethnicity.values());
+    }
+
+    @PostMapping("/states/{stateId}")
+    public String setState(HttpSession httpSession, @PathVariable Long stateId) {
+
+        Optional<State> state = stateRepository.findById(stateId);
+        if (state.isPresent()) {
+            httpSession.setAttribute("current-state", state);
+            return "Succeessful setAttribute stateId: " + stateId;
+        }
+
+        throw new IllegalArgumentException("Error setAttribute stateId: " + stateId);
     }
 
 //    TODO: implement a maxMMDistricts for a districting (enacted)

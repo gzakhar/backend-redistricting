@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @RestController
@@ -25,10 +26,23 @@ public class DistrictingController {
     }
 
     @GetMapping("/districtings/{districtingId}")
-    public Optional<Districting> getDistrictingById(@PathVariable Long districtingId) {
+    public Districting getDistrictingById(HttpSession httpSession, @PathVariable Long districtingId) {
 
-        return districtingRepository.findById(districtingId);
+        return districtingRepository.findById(districtingId).orElse(null);
     }
+
+//    TODO: session not available.
+//    @GetMapping("/districtings/{districtingId}")
+//    public Districting getDistrictingById(HttpSession httpSession, @PathVariable Long districtingId) {
+//
+//        Districting districting = (Districting) httpSession.getAttribute("current-districting");
+//        if(districting == null){
+//            System.out.println("No districting districtingId: " + districtingId + " cached");
+//            districting = districtingRepository.findById(districtingId).orElse(null);
+//        }
+//
+//        return districting;
+//    }
 
     @GetMapping("/districtings/{districtingId}/districts")
     public List<District> getDistrictByDistrictingId(@PathVariable Long districtingId) {
@@ -45,11 +59,23 @@ public class DistrictingController {
     }
 
     @GetMapping("/districtings/{districtingId}/population-type-availability")
-    public Map<PopulationType, Boolean> getPopulationTypeAvailability(@PathVariable Long districtingId){
+    public Map<PopulationType, Boolean> getPopulationTypeAvailability(@PathVariable Long districtingId) {
 
         Optional<Districting> districting = districtingRepository.findById(districtingId);
 
         return districting.map(Districting::getPopulationTypeAvailablability).orElse(null);
+    }
+
+    @PostMapping("/districtings/{districtingId}")
+    public String setDistricting(HttpSession httpSession, @PathVariable Long districtingId) {
+
+        Districting districting = districtingRepository.findById(districtingId).orElse(null);
+        if (districting != null) {
+            httpSession.setAttribute("current-districting", districting);
+            return "Succeessful setAttribute districtingId: " + districtingId;
+        }
+
+        throw new IllegalArgumentException("Succeessful setAttribute districtingId: " + districtingId);
     }
 //    @GetMapping("/getConstraintCountIncumbent")
 //    public List<Map<String, Object>> getConstraintCountIncumbent(int[] incumbents, int jobId) {
