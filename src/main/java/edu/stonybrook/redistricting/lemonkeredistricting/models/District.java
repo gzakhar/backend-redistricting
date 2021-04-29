@@ -2,6 +2,8 @@ package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 public class District {
@@ -9,7 +11,14 @@ public class District {
     private Long districtId;
     private Long districtingId;
     private Integer totalPopulation;
+    private Map<Ethnicity, Boolean> isMajorityMinority;
     private Collection<Precinct> precincts;
+
+    @PostLoad
+    private void setUp() {
+        this.setTotalPopulation();
+        this.setMajorityMinority();
+    }
 
     @Id
     @Column(name = "district_id")
@@ -31,7 +40,11 @@ public class District {
         this.districtingId = districtingId;
     }
 
-    @PostLoad
+    @Transient
+    public Integer getTotalPopulation() {
+        return totalPopulation;
+    }
+
     public void setTotalPopulation() {
 
         Integer totalPopulation = 0;
@@ -44,8 +57,41 @@ public class District {
     }
 
     @Transient
-    public Integer getTotalPopulation() {
-        return totalPopulation;
+    public Map<Ethnicity, Boolean> getMajorityMinority() {
+        return isMajorityMinority;
+    }
+
+    public Boolean isMajorityMinority(Ethnicity ethnicity){
+        return this.isMajorityMinority.get(ethnicity);
+    }
+
+    public void setMajorityMinority() {
+
+        int totalPoulation = getTotalPopulation();
+
+        this.isMajorityMinority = new HashMap<>();
+
+        for (Ethnicity e : Ethnicity.values()) {
+
+            int ethnisityPopulation = getEthnicityPopulation(e);
+
+            double percentage = (double) ethnisityPopulation / (double) totalPoulation;
+            System.out.println(percentage);
+
+            this.isMajorityMinority.put(e, percentage >= 0.5);
+        }
+
+    }
+
+    public Integer getEthnicityPopulation(Ethnicity ethnicity) {
+
+        int ethnicityPopulation = 0;
+        for (Precinct p : this.precincts) {
+            ethnicityPopulation += p.getTotalEthnisityPopulation(ethnicity);
+        }
+
+        System.out.println(ethnicityPopulation);
+        return ethnicityPopulation;
     }
 
     @OneToMany

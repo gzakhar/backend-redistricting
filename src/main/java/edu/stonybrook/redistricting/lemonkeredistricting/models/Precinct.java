@@ -218,6 +218,26 @@ public class Precinct {
         return (getTotWhite() + getTotBlack() + getTotHisp() + getTotAsian() + getTotAIndian() + getTotOther());
     }
 
+    public Integer getTotalEthnisityPopulation(Ethnicity ethnicity){
+
+        switch (ethnicity){
+            case WHITE:
+                return getTotWhite();
+            case BLACK:
+                return getTotBlack();
+            case HISPANIC:
+                return getTotHisp();
+            case ASIAN:
+                return getTotAsian();
+            case AMERICAN_INDIAN:
+                return getTotAIndian();
+            case OTHER:
+                return getTotOther();
+            default:
+                return null;
+        }
+    }
+
 //    @Column(name = "geo_json")
 //    @Type(type = "json")
 //    public Map<String, Object> getGeometry() {

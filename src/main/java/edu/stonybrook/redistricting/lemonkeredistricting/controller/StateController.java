@@ -18,19 +18,19 @@ import java.util.Optional;
 public class StateController {
 
     @Autowired
-    private StateRepository stateRepository;
+    private JobRepository jobRepository;
+
+    @Autowired
+    private JobSummaryRepository jobSummaryRepository;
 
     @Autowired
     private PrecinctRepository precinctRepository;
 
     @Autowired
-    private JobRepository jobRepository;
+    private StateRepository stateRepository;
 
     @Autowired
     private StateSummaryRepository stateSummaryRepository;
-
-    @Autowired
-    private JobSummaryRepository jobSummaryRepository;
 
     @GetMapping("/states")
     public List<State> getState() {
@@ -89,5 +89,4 @@ public class StateController {
 
         return stateSummaryRepository.findAll();
     }
-
 }

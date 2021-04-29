@@ -19,11 +19,10 @@ import java.util.Optional;
 public class JobController {
 
     @Autowired
-    private JobRepository jobRepository;
-
-    @Autowired
     private DistrictingRepository districtingRepository;
 
+    @Autowired
+    private JobRepository jobRepository;
 
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {

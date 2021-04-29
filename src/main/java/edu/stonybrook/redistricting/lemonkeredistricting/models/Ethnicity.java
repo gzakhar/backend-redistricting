@@ -6,5 +6,5 @@ public enum Ethnicity {
     HISPANIC,
     ASIAN,
     AMERICAN_INDIAN,
-    NATIVE_HAWAIIAN
+    OTHER
 }

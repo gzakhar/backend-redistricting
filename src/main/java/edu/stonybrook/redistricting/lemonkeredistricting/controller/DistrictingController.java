@@ -13,10 +13,10 @@ import java.util.*;
 public class DistrictingController {
 
     @Autowired
-    private DistrictingRepository districtingRepository;
+    private DistrictRepository districtRepository;
 
     @Autowired
-    private DistrictRepository districtRepository;
+    private DistrictingRepository districtingRepository;
 
     @GetMapping("/districtings")
     public List<Districting> getDistrictings() {
@@ -78,5 +78,4 @@ public class DistrictingController {
 //                                                                double populationFairness) {
 //        return null;
 //    }
-
 }
