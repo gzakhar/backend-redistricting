@@ -1,6 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.District;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.Ethnicity;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctRepository;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -37,6 +39,16 @@ public class DistrictController {
     public List<Precinct> getPrecinctsByDistrictId(@PathVariable Long districtId){
 
         return precinctRepository.getPrecinctByDistrictId(districtId);
+    }
+
+    @GetMapping("/districts/{districtId}/is-majority-minority")
+    public Map<Ethnicity, Boolean> getMMDistricting(@PathVariable Long districtId){
+
+        District district = districtRepository.findById(districtId).orElse(null);
+        if (district != null){
+            return district.isMajorityMinority();
+        }
+        return null;
     }
 
 }

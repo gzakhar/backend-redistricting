@@ -16,9 +16,6 @@ import java.util.Optional;
 public class StateController {
 
     @Autowired
-    private DistrictingRepository districtingRepository;
-
-    @Autowired
     private JobRepository jobRepository;
 
     @Autowired
@@ -112,7 +109,5 @@ public class StateController {
 //    TODO: implement a maxMMDistricts for a districting (enacted)
 //    @GetMapping("/states/{id}/max-mm-districts")
 //    public List<StateSummary> getMaximumMMDistricts() {
-//
-//
 //    }
 }

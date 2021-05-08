@@ -1,10 +1,10 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import org.json.simple.JSONObject;
+
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Districting {
@@ -78,9 +78,18 @@ public class Districting {
         Precinct precinct = district.getPrecincts().iterator().next();
 
         Map<PopulationType, Boolean> populationAvailability = new HashMap<>();
+//        TODO: Dont use for each, do map and the collect.
         Arrays.stream(PopulationType.values()).forEach(p -> populationAvailability.put(p, precinct.isPopulationTypeAvailable(p)));
 
         return populationAvailability;
+    }
+
+    @Transient
+    public List<Integer[]> getRecombinationJson(){
+
+        return districts.stream()
+                .map(District::getPrecinctIds)
+                .collect(Collectors.toList());
     }
 
     @Override

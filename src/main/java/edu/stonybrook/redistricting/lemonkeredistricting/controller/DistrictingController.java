@@ -2,11 +2,15 @@ package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.*;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -18,6 +22,9 @@ public class DistrictingController {
 
     @Autowired
     private DistrictingRepository districtingRepository;
+
+    @Autowired
+    private GeometryCalculation geometryCalculation;
 
     @GetMapping("/districtings")
     public List<Districting> getDistrictings() {
@@ -77,6 +84,14 @@ public class DistrictingController {
 
         throw new IllegalArgumentException("Succeessful setAttribute districtingId: " + districtingId);
     }
+
+    @GetMapping("/districtings/{districtingId}/geometry")
+    public JSONObject getDistrictingGeometry(@PathVariable Long districtingId) throws IOException, ParseException {
+
+
+        return geometryCalculation.calculateDistrictingGeometry(districtingId);
+    }
+
 //    @GetMapping("/getConstraintCountIncumbent")
 //    public List<Map<String, Object>> getConstraintCountIncumbent(int[] incumbents, int jobId) {
 //        return null;

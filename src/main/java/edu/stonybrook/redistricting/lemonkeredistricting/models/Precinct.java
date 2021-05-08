@@ -215,17 +215,17 @@ public class Precinct {
         this.cvapOther = cvapOther;
     }
 
+    public Boolean isPopulationTypeAvailable(PopulationType populationType) {
+
+        return Arrays.stream(Ethnicity.values()).noneMatch(ethnicity -> getPopulation(ethnicity, populationType) == null);
+    }
+
     public Integer getTotalPopulationType(PopulationType populationType) {
 
         if (!isPopulationTypeAvailable(populationType))
             return null;
 
         return Arrays.stream(Ethnicity.values()).map((ethnicity -> getPopulation(ethnicity, populationType))).reduce(0, Integer::sum);
-    }
-
-    public Boolean isPopulationTypeAvailable(PopulationType populationType) {
-
-        return Arrays.stream(Ethnicity.values()).noneMatch(ethnicity -> getPopulation(ethnicity, populationType) == null);
     }
 
     public Integer getPopulation(Ethnicity ethnicity, PopulationType populationType) {

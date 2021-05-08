@@ -1,9 +1,8 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class District {
@@ -49,11 +48,24 @@ public class District {
         this.precincts = precincts;
     }
 
+    @Transient
+    public Map<Ethnicity, Boolean> isMajorityMinority() {
+
+        Map<Ethnicity, Boolean> isMajorityMinority = new HashMap<>();
+
+        for (Ethnicity e : Ethnicity.values()) {
+            isMajorityMinority.put(e, isMajorityMinority(e));
+        }
+
+        return isMajorityMinority;
+    }
+
     public Boolean isMajorityMinority(Ethnicity ethnicity) {
 
         Integer ethnicityPopulation = getPopulation(ethnicity, PopulationType.TOTAL_POPULATION);
         Integer totalPopulation = getTotalPopulation(PopulationType.TOTAL_POPULATION);
 
+//        TODO: No 0.5
         return ((double) ethnicityPopulation / (double) totalPopulation) >= 0.5;
     }
 
@@ -71,6 +83,11 @@ public class District {
                 .reduce(0, Integer::sum);
     }
 
+    @Transient
+    public Integer[] getPrecinctIds() {
+
+        return precincts.stream().map(precinct -> precinct.getPrecinctId().intValue()).toArray(Integer[]::new);
+    }
 
     @Override
     public String toString() {
