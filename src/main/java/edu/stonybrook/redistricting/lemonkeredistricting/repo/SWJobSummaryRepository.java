@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface JobSummaryRepository extends JpaRepository<JobSummary, Long> {
+public interface SWJobSummaryRepository extends JpaRepository<JobSummary, Long> {
 
     @Query(nativeQuery = true, value = "SELECT j.*, COUNT(*) AS number_districtings\n" +
             "FROM job j\n" +

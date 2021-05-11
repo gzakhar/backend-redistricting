@@ -88,6 +88,13 @@ public class DistrictingController {
     @GetMapping("/districtings/{districtingId}/geometry")
     public JSONObject getDistrictingGeometry(@PathVariable Long districtingId) throws IOException, ParseException {
 
+        Districting districting = districtingRepository.findById(districtingId).orElse(null);
+
+        return Objects.requireNonNull(districting).getGeometry();
+    }
+
+    @GetMapping("/districtings/{districtingId}/geometry-test")
+    public JSONObject getDistrictingGeometryTest(@PathVariable Long districtingId) throws IOException, ParseException {
 
         return geometryCalculation.calculateDistrictingGeometry(districtingId);
     }

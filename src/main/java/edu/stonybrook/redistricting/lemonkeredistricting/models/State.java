@@ -1,5 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import org.locationtech.jts.geom.Geometry;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -74,6 +76,12 @@ public class State {
     public void setIncumbents(Collection<Incumbent> incumbents) {
         this.incumbents = incumbents;
     }
+
+//    @Transient
+//    @OneToMany(mappedBy = "stateId")
+//    public PrecinctGeometry getPrecinctGeometries(){
+//
+//    }
 
     @Override
     public String toString() {

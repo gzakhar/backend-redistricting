@@ -1,6 +1,9 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.persistence.*;
 import java.util.*;
@@ -9,19 +12,15 @@ import java.util.stream.Collectors;
 @Entity
 public class Districting {
 
-    private Long districtingId;
-    private Collection<District> districts;
-//    private Map<Ethnicity, Integer> mMDistrictCount;
-
-//    TODO: @PostLoad to initialize attributes.
-//    @PostLoad
-//    private void setUp() {
-//        this.setMMDistrictCount();
-//    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "districting_id")
+    private Long districtingId;
+
+    @OneToMany(mappedBy = "districtingId")
+    private Collection<District> districts;
+
+    /** Getters Setters. **/
     public Long getDistrictingId() {
         return districtingId;
     }
@@ -30,7 +29,6 @@ public class Districting {
         this.districtingId = districtingId;
     }
 
-    @OneToMany(mappedBy = "districtingId")
     public Collection<District> getDistricts() {
         return districts;
     }
@@ -39,6 +37,8 @@ public class Districting {
         this.districts = districts;
     }
 
+    /** Class Functions. **/
+    @Transient
     public Integer getMMDistrictCount(Ethnicity ethnicity) {
 
         return (int) districts.stream().map(d -> d.isMajorityMinority(ethnicity)).filter(d -> d).count();
@@ -85,11 +85,39 @@ public class Districting {
     }
 
     @Transient
-    public List<Integer[]> getRecombinationJson(){
+    public List<Integer[]> getRecombinationJson() {
 
         return districts.stream()
                 .map(District::getPrecinctIds)
                 .collect(Collectors.toList());
+    }
+
+    @Transient
+    public List<District> getDistrictsPopulationDesc(PopulationType populationType) {
+
+        List<District> orderedDistricts = new ArrayList<>(List.copyOf(districts));
+        orderedDistricts.sort(Comparator.comparingInt(o -> o.getTotalPopulation(populationType)));
+
+        return orderedDistricts;
+    }
+
+    @Transient
+    public JSONObject getGeometry() {
+
+
+        List<JSONObject> districtingArrayList = districts.stream()
+                .map(district -> GeometryCalculation.geometryToJson(district.getGeometry()))
+                .collect(Collectors.toList());
+
+
+        JSONArray features = new JSONArray();
+        features.addAll(districtingArrayList);
+
+        JSONObject output = new JSONObject();
+        output.put("features", features);
+        output.put("type", "FeatureCollection");
+
+        return output;
     }
 
     @Override

@@ -2,10 +2,14 @@ package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.*;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -16,10 +20,10 @@ import java.util.Optional;
 public class StateController {
 
     @Autowired
-    private JobRepository jobRepository;
+    private SWJobRepository SWJobRepository;
 
     @Autowired
-    private JobSummaryRepository jobSummaryRepository;
+    private SWJobSummaryRepository SWJobSummaryRepository;
 
     @Autowired
     private PrecinctRepository precinctRepository;
@@ -29,6 +33,9 @@ public class StateController {
 
     @Autowired
     private StateSummaryRepository stateSummaryRepository;
+
+    @Autowired
+    private GeometryCalculation geometryCalculation;
 
     @GetMapping("/states")
     public List<State> getState() {
@@ -45,7 +52,7 @@ public class StateController {
     @GetMapping("/states/{stateId}/jobs")
     public List<Job> getJobs(@PathVariable Long stateId) {
 
-        return jobRepository.findAllByStateId(stateId);
+        return SWJobRepository.findAllByStateId(stateId);
     }
 
     @GetMapping("/states/{stateId}/incumbents")
@@ -79,7 +86,7 @@ public class StateController {
     @GetMapping("/states/{stateId}/job-summaries")
     public List<JobSummary> getJobSummariesByState(@PathVariable Long stateId) {
 
-        return jobSummaryRepository.findByStateId(stateId);
+        return SWJobSummaryRepository.findByStateId(stateId);
     }
 
     @GetMapping("/states/state-summaries")
@@ -104,6 +111,12 @@ public class StateController {
         }
 
         throw new IllegalArgumentException("Error setAttribute stateId: " + stateId);
+    }
+
+    @GetMapping("/states/{stateId}/precinct-geometries")
+    public JSONObject getPrecinctGeometries(@PathVariable Long stateId) throws IOException, ParseException {
+
+        return geometryCalculation.calculatePrecinctGeometry(stateId);
     }
 
 //    TODO: implement a maxMMDistricts for a districting (enacted)

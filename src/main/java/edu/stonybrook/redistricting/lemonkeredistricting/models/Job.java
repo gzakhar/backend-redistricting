@@ -9,8 +9,9 @@ public class Job {
     private Long jobId;
     private Long stateId;
     private String seed_file;
-    private Integer cooling_period;
+    private Integer cooling_periods;
     private Integer number_rounds;
+    private Integer number_runs;
     private Collection<Districting> districtings;
 
     @Id
@@ -41,12 +42,12 @@ public class Job {
         this.seed_file = seed_file;
     }
 
-    public Integer getCooling_period() {
-        return cooling_period;
+    public Integer getCooling_periods() {
+        return cooling_periods;
     }
 
-    public void setCooling_period(Integer cooling_period) {
-        this.cooling_period = cooling_period;
+    public void setCooling_periods(Integer cooling_periods) {
+        this.cooling_periods = cooling_periods;
     }
 
     public Integer getNumber_rounds() {
@@ -55,6 +56,14 @@ public class Job {
 
     public void setNumber_rounds(Integer number_rounds) {
         this.number_rounds = number_rounds;
+    }
+
+    public Integer getNumber_runs() {
+        return number_runs;
+    }
+
+    public void setNumber_runs(Integer number_runs) {
+        this.number_runs = number_runs;
     }
 
     @OneToMany
@@ -71,14 +80,16 @@ public class Job {
         this.districtings = districtings;
     }
 
+
     @Override
     public String toString() {
         return "Job{" +
                 "jobId=" + jobId +
                 ", stateId=" + stateId +
                 ", seed_file='" + seed_file + '\'' +
-                ", cooling_period=" + cooling_period +
+                ", cooling_periods=" + cooling_periods +
                 ", number_rounds=" + number_rounds +
+                ", number_runs=" + number_runs +
                 ", districtings=" + districtings +
                 '}';
     }

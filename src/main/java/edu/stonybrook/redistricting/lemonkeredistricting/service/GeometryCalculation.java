@@ -1,8 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.service;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.GeometryState;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -71,6 +69,8 @@ public class GeometryCalculation {
             JSONObject feature = (JSONObject) features.get(i);
             try {
                 Geometry geometry = reader.read(feature.get("geometry").toString());
+//                TODO: figure out the Precision Model.
+//                geometry = GeometryPrecisionReducer.reduce(geometry, new PrecisionModel(1000));
                 output[i] = geometry;
             } catch (org.locationtech.jts.io.ParseException e) {
                 e.printStackTrace();
@@ -102,13 +102,33 @@ public class GeometryCalculation {
         return null;
     }
 
+    public static JSONObject geometryToJson(Geometry geometry) {
+        JSONParser parser = new JSONParser();
+        GeoJsonWriter writer = new GeoJsonWriter();
+        try {
+            JSONObject json = (JSONObject) parser.parse(writer.write(geometry));
+            JSONArray cdn = (JSONArray) json.get("coordinates");
+            if (((String) json.get("type")).equals("MultiPolygon")) {
+                cdn = (JSONArray) cdn.get(0);
+            }
+            JSONObject outGeometry = new JSONObject();
+            outGeometry.put("coordinates", cdn);
+            outGeometry.put("type", "Polygon");
+            return outGeometry;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public JSONObject calculateDistrictingGeometry(long districtingId) throws IOException, ParseException {
 
-        JSONParser parser = new JSONParser();
+//        JSONParser parser = new JSONParser();
+//
+//        InputStream precinctJsonIn = GeometryCalculation.class.getResourceAsStream("/NYPopVer5.json");
+//        Reader PrecinctReader = new InputStreamReader(precinctJsonIn);
+        JSONObject precinctGeoJson = GeometryState.NY.getPrecinctGeoJson();
 
-        InputStream precinctJsonIn = GeometryCalculation.class.getResourceAsStream("/NYPopVer5.json");
-        Reader PrecinctReader = new InputStreamReader(precinctJsonIn);
-        JSONObject precinctGeoJson = (JSONObject) parser.parse(PrecinctReader);
 
         List<Integer[]> precinctIdsArrayList = Objects
                 .requireNonNull(districtingRepository.findById(districtingId).orElse(null))
@@ -128,8 +148,7 @@ public class GeometryCalculation {
 
 
         JSONArray features = new JSONArray();
-        for (JSONObject districtJson : districtingArrayList)
-            features.add(districtJson);
+        for (JSONObject districtJson : districtingArrayList) features.add(districtJson);
 
         JSONObject output = new JSONObject();
         output.put("features", features);
@@ -137,8 +156,17 @@ public class GeometryCalculation {
 
         long end = System.currentTimeMillis();
         System.out.println("CALCULATION TIME: " + (end - start));
-        return output;
 
+        return output;
+    }
+
+    public JSONObject calculatePrecinctGeometry(long stateId) throws IOException, ParseException {
+
+        JSONParser parser = new JSONParser();
+
+        InputStream precinctJsonIn = GeometryCalculation.class.getResourceAsStream("/NYPopVer5.json");
+        Reader PrecinctReader = new InputStreamReader(precinctJsonIn);
+        return (JSONObject) parser.parse(PrecinctReader);
     }
 
 }

@@ -1,7 +1,13 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctGeometryRepo;
 import org.hibernate.annotations.TypeDef;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.geojson.GeoJsonReader;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -30,7 +36,6 @@ public class Precinct {
     private Integer cvapAsian;
     private Integer cvapAIndian;
     private Integer cvapOther;
-//    private Map<String, Object> geometry;
 
     /* getters and setters*/
     @Id
@@ -286,15 +291,13 @@ public class Precinct {
         }
     }
 
-//    @Column(name = "geo_json")
-//    @Type(type = "json")
-//    public Map<String, Object> getGeometry() {
-//        return geometry;
-//    }
-//
-//    public void setGeometry(Map<String, Object> geometry) {
-//        this.geometry = geometry;
-//    }
+    @Transient
+    @JsonIgnore
+    public Geometry getGeometry() {
+
+        return PrecinctGeometryRepo.getPrecinctGeometry(this.precinctId);
+    }
+
 
     @Override
     public String toString() {
