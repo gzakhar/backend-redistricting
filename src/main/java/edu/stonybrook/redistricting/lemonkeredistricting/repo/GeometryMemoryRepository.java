@@ -23,7 +23,7 @@ public class GeometryMemoryRepository {
 
     private static final GeoJsonReader reader = new GeoJsonReader();
 
-//    @PostConstruct
+    @PostConstruct
     private void construct() {
 
         precinctGeometryMap = new HashMap<>();
