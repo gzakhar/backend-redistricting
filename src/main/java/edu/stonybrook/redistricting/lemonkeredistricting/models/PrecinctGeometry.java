@@ -1,5 +1,11 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.json.simple.JSONObject;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,6 +13,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "precinct")
+@TypeDefs(
+        @TypeDef(name = "json", typeClass = JsonStringType.class)
+)
 public class PrecinctGeometry {
 
     @Id
@@ -14,7 +23,8 @@ public class PrecinctGeometry {
     private long precinctId;
 
     @Column(name = "geometry")
-    private String geometry;
+    @Type(type = "json")
+    private JSONObject geometry;
 
     public long getPrecinctId() {
         return precinctId;
@@ -24,11 +34,11 @@ public class PrecinctGeometry {
         this.precinctId = precinctId;
     }
 
-    public String getGeometry() {
+    public JSONObject getGeometry() {
         return geometry;
     }
 
-    public void setGeometry(String geometry) {
+    public void setGeometry(JSONObject geometry) {
         this.geometry = geometry;
     }
 

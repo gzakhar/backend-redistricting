@@ -1,7 +1,9 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.service;
 
+import edu.stonybrook.redistricting.lemonkeredistricting.models.District;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.GeometryState;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.GeometryMemoryRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,6 +29,8 @@ public class GeometryCalculation {
     @Autowired
     private DistrictingRepository districtingRepository;
 
+    private static JSONParser parser = new JSONParser();
+    private static GeoJsonWriter writer = new GeoJsonWriter();
 
     //Converts single/multiple precinct/s information to geojson.
     private static JSONObject getGeojsons(Integer[] ids, JSONObject precinctJson) {
@@ -42,22 +48,6 @@ public class GeometryCalculation {
 
         return output;
     }
-
-    //exports JSONObject as .json file
-    private static void exportGeojson(JSONObject output, String name) throws IOException {
-
-        FileWriter file;
-        file = new FileWriter(name + ".json");
-        file.write(output.toJSONString());
-        System.out.println("File successfully exported to JSON");
-        try {
-            file.flush();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     //get Array of geometries for precincts in a district.
     private static Geometry[] getDistrictGeometries(JSONObject districtJsons) {
@@ -127,12 +117,28 @@ public class GeometryCalculation {
 //
 //        InputStream precinctJsonIn = GeometryCalculation.class.getResourceAsStream("/NYPopVer5.json");
 //        Reader PrecinctReader = new InputStreamReader(precinctJsonIn);
-        JSONObject precinctGeoJson = GeometryState.NY.getPrecinctGeoJson();
+//        JSONObject precinctGeoJson = GeometryState.NY.getPrecinctGeoJson();
+//        TODO: state precinct geometry file.
+//        JSONObject precinctGeoJson = Objects.requireNonNull(precinctGeometryRepo.find(4l).orElse(null)).getGeometry();
+        JSONObject precinctGeoJson = null;
+
+//        List<Integer[]> precinctIdsArrayList = Objects
+//                .requireNonNull(districtingRepository.findById(districtingId).orElse(null))
+//                .getRecombinationJson();
 
 
-        List<Integer[]> precinctIdsArrayList = Objects
-                .requireNonNull(districtingRepository.findById(districtingId).orElse(null))
-                .getRecombinationJson();
+        List<Integer[]> precinctIdsArrayList = new ArrayList<>();
+        Collection<District> districts = Objects.requireNonNull(districtingRepository.findById(districtingId).orElse(null)).getDistricts();
+
+        for (District district : districts) {
+            Integer[] pArray = new Integer[district.getPrecincts().size()];
+            int i = 0;
+            for (Precinct p : district.getPrecincts()) {
+                pArray[i++] = p.getPrecinctId().intValue();
+            }
+            precinctIdsArrayList.add(pArray);
+        }
+
 
         long start = System.currentTimeMillis();
 
@@ -167,6 +173,34 @@ public class GeometryCalculation {
         InputStream precinctJsonIn = GeometryCalculation.class.getResourceAsStream("/NYPopVer5.json");
         Reader PrecinctReader = new InputStreamReader(precinctJsonIn);
         return (JSONObject) parser.parse(PrecinctReader);
+    }
+
+    public static JSONObject geometry2Json(Geometry geometry) {
+
+//        TODO: Im assuming that here @Harlam is attempting to get rid of the geometry that isnt needed. this should be looked at again.
+        try {
+            JSONObject json = (JSONObject) parser.parse(writer.write(geometry));
+            JSONArray cdn = (JSONArray) json.get("coordinates");
+            if (((String) json.get("type")).equals("MultiPolygon")) {
+                cdn = (JSONArray) cdn.get(0);
+            }
+            JSONObject outGeometry = new JSONObject();
+            outGeometry.put("coordinates", cdn);
+            outGeometry.put("type", "Polygon");
+            return outGeometry;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+//        TODO: This is a regular conversion, just reading the Geometry into JsonObject.
+//        try {
+//            return (JSONObject) parser.parse(writer.write(geometry));
+//        } catch (org.json.simple.parser.ParseException e) {
+//            System.err.println("Error Converting Geometry");
+//            e.printStackTrace();
+//        }
+
+        return null;
     }
 
 }

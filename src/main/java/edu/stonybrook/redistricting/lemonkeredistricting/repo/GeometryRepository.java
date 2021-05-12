@@ -6,8 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface PrecinctGeometryRepository extends JpaRepository<PrecinctGeometry, Long> {
+public interface GeometryRepository extends JpaRepository<PrecinctGeometry, Long> {
 
-    @Query(nativeQuery = true, value = "select precinct_id, geometry FROM precinct WHERE state_id = (:id)")
+    @Query(nativeQuery = true, value = "select * from precinct where state_id = (:id)")
     List<PrecinctGeometry> findAllByStateId(long id);
+
 }

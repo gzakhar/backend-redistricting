@@ -5,7 +5,9 @@ import edu.stonybrook.redistricting.lemonkeredistricting.models.Ethnicity;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
 import org.json.simple.JSONObject;
+import org.locationtech.jts.geom.Geometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,7 +57,9 @@ public class DistrictController {
 
     @GetMapping("/districts/{districtId}/geometry")
     public JSONObject getGeometry(@PathVariable Long districtId ){
-        return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).toJsonGeometry();
+
+        Geometry geometry = Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).getGeometry();
+        return GeometryCalculation.geometry2Json(geometry);
     }
 
 }

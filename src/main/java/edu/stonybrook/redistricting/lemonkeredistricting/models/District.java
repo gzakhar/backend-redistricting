@@ -119,23 +119,9 @@ public class District {
 
         GeometryCollection geometryCollection = new GeometryCollection(geometryArray, new GeometryFactory());
 
-        return geometryCollection.union();
+        return geometryCollection.union().getBoundary();
     }
 
-    @Transient
-    public JSONObject toJsonGeometry() {
-
-        JSONObject jsonObject = GeometryCalculation.geometryToJson(getGeometry());
-
-        JSONArray features = new JSONArray();
-        features.add(jsonObject);
-
-        JSONObject output = new JSONObject();
-        output.put("features", features);
-        output.put("type", "FeatureCollection");
-
-        return output;
-    }
 
     @Override
     public String toString() {

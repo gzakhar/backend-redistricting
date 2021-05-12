@@ -2,12 +2,11 @@ package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctGeometryRepo;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.GeometryMemoryRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
 import org.hibernate.annotations.TypeDef;
+import org.json.simple.JSONObject;
 import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.io.ParseException;
-import org.locationtech.jts.io.geojson.GeoJsonReader;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Arrays;
@@ -294,10 +293,8 @@ public class Precinct {
     @Transient
     @JsonIgnore
     public Geometry getGeometry() {
-
-        return PrecinctGeometryRepo.getPrecinctGeometry(this.precinctId);
+        return GeometryMemoryRepository.getPrecinctGeometry(this.precinctId);
     }
-
 
     @Override
     public String toString() {

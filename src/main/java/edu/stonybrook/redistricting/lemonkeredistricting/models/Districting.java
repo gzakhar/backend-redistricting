@@ -1,5 +1,6 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,30 +40,35 @@ public class Districting {
 
     /** Class Functions. **/
     @Transient
+    @JsonIgnore
     public Integer getMMDistrictCount(Ethnicity ethnicity) {
 
         return (int) districts.stream().map(d -> d.isMajorityMinority(ethnicity)).filter(d -> d).count();
     }
 
     @Transient
+    @JsonIgnore
     public Integer getPopulation(Ethnicity ethnicity, PopulationType populationType) {
 
         return districts.stream().map(d -> d.getPopulation(ethnicity, populationType)).reduce(0, Integer::sum);
     }
 
     @Transient
+    @JsonIgnore
     public Integer getTotalPopulation(PopulationType populationType) {
 
         return districts.stream().map(d -> d.getTotalPopulation(populationType)).reduce(0, Integer::sum);
     }
 
     @Transient
+    @JsonIgnore
     public Integer getDistrictingCount() {
 
         return districts.size();
     }
 
     @Transient
+    @JsonIgnore
     public Integer getMaxMMDistricts(Ethnicity ethnicity) {
 
         int ethnicityPopulation = getPopulation(ethnicity, PopulationType.TOTAL_POPULATION);
@@ -72,6 +78,7 @@ public class Districting {
     }
 
     @Transient
+    @JsonIgnore
     public Map<PopulationType, Boolean> getPopulationTypeAvailablability() {
 
         District district = districts.iterator().next();
@@ -85,6 +92,7 @@ public class Districting {
     }
 
     @Transient
+    @JsonIgnore
     public List<Integer[]> getRecombinationJson() {
 
         return districts.stream()
@@ -93,6 +101,7 @@ public class Districting {
     }
 
     @Transient
+    @JsonIgnore
     public List<District> getDistrictsPopulationDesc(PopulationType populationType) {
 
         List<District> orderedDistricts = new ArrayList<>(List.copyOf(districts));
@@ -102,13 +111,12 @@ public class Districting {
     }
 
     @Transient
+    @JsonIgnore
     public JSONObject getGeometry() {
 
-
         List<JSONObject> districtingArrayList = districts.stream()
-                .map(district -> GeometryCalculation.geometryToJson(district.getGeometry()))
+                .map(district -> GeometryCalculation.geometry2Json(district.getGeometry()))
                 .collect(Collectors.toList());
-
 
         JSONArray features = new JSONArray();
         features.addAll(districtingArrayList);

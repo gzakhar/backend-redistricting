@@ -1,5 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.json.simple.JSONObject;
 import org.locationtech.jts.geom.Geometry;
 
 import javax.persistence.*;
@@ -76,6 +78,8 @@ public class State {
     public void setIncumbents(Collection<Incumbent> incumbents) {
         this.incumbents = incumbents;
     }
+
+
 
 //    @Transient
 //    @OneToMany(mappedBy = "stateId")

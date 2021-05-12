@@ -6,17 +6,26 @@ import java.util.Collection;
 @Entity
 public class Job {
 
-    private Long jobId;
-    private Long stateId;
-    private String seed_file;
-    private Integer cooling_periods;
-    private Integer number_rounds;
-    private Integer number_runs;
-    private Collection<Districting> districtings;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "job_id")
+    private Long jobId;
+    @Column(name = "state_id")
+    private Long stateId;
+    @Column(name = "cooling_periods")
+    private Integer coolingPrediods;
+    @Column(name = "number_rounds")
+    private Integer numberRounds;
+    @Column(name = "number_runs")
+    private Integer numberRuns;
+    @OneToMany
+    @JoinTable(
+            name = "job_districting_map",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "districting_id")
+    )
+    private Collection<Districting> districtings;
+
     public Long getJobId() {
         return jobId;
     }
@@ -25,7 +34,6 @@ public class Job {
         this.jobId = jobId;
     }
 
-    @Column(name = "state_id")
     public Long getStateId() {
         return stateId;
     }
@@ -34,44 +42,30 @@ public class Job {
         this.stateId = stateId;
     }
 
-    public String getSeed_file() {
-        return seed_file;
+    public Integer getCoolingPrediods() {
+        return coolingPrediods;
     }
 
-    public void setSeed_file(String seed_file) {
-        this.seed_file = seed_file;
+    public void setCoolingPrediods(Integer coolingPrediods) {
+        this.coolingPrediods = coolingPrediods;
     }
 
-    public Integer getCooling_periods() {
-        return cooling_periods;
+    public Integer getNumberRounds() {
+        return numberRounds;
     }
 
-    public void setCooling_periods(Integer cooling_periods) {
-        this.cooling_periods = cooling_periods;
+    public void setNumberRounds(Integer numberRounds) {
+        this.numberRounds = numberRounds;
     }
 
-    public Integer getNumber_rounds() {
-        return number_rounds;
+    public Integer getNumberRuns() {
+        return numberRuns;
     }
 
-    public void setNumber_rounds(Integer number_rounds) {
-        this.number_rounds = number_rounds;
+    public void setNumberRuns(Integer numberRuns) {
+        this.numberRuns = numberRuns;
     }
 
-    public Integer getNumber_runs() {
-        return number_runs;
-    }
-
-    public void setNumber_runs(Integer number_runs) {
-        this.number_runs = number_runs;
-    }
-
-    @OneToMany
-    @JoinTable(
-            name = "job_districting_map",
-            joinColumns = @JoinColumn(name = "job_id"),
-            inverseJoinColumns = @JoinColumn(name = "districting_id")
-    )
     public Collection<Districting> getDistrictings() {
         return districtings;
     }
@@ -80,16 +74,14 @@ public class Job {
         this.districtings = districtings;
     }
 
-
     @Override
     public String toString() {
         return "Job{" +
                 "jobId=" + jobId +
                 ", stateId=" + stateId +
-                ", seed_file='" + seed_file + '\'' +
-                ", cooling_periods=" + cooling_periods +
-                ", number_rounds=" + number_rounds +
-                ", number_runs=" + number_runs +
+                ", coolingPrediods=" + coolingPrediods +
+                ", numberRounds=" + numberRounds +
+                ", numberRounds=" + numberRounds +
                 ", districtings=" + districtings +
                 '}';
     }

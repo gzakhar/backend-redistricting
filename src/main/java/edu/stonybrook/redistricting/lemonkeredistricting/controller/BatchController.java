@@ -1,8 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctGeometryRepo;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.GeometryMemoryRepository;
 import org.json.simple.JSONObject;
-import org.locationtech.jts.geom.Geometry;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -11,7 +10,6 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +28,7 @@ public class BatchController {
     private Job districtingSummaryGenerationJob;
 
     @Autowired
-    private PrecinctGeometryRepo precinctGeometryRepo;
+    private GeometryMemoryRepository geometryMemoryRepository;
 
     @GetMapping("/run")
     public void run() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
@@ -40,11 +38,4 @@ public class BatchController {
                         .addLong("timestamp", Instant.now().getEpochSecond())
                         .toJobParameters());
     }
-
-    @GetMapping("/geometry/{precinctId}")
-    public JSONObject testGeometryRepo(@PathVariable long precinctId){
-        return precinctGeometryRepo.getPrecinctJson(precinctId);
-    }
-
-
 }

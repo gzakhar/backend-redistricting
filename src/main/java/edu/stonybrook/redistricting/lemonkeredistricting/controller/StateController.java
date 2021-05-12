@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/lemonke")
 public class StateController {
 
     @Autowired
-    private SWJobRepository SWJobRepository;
+    private WulfJobRepository WulfJobRepository;
 
     @Autowired
-    private SWJobSummaryRepository SWJobSummaryRepository;
+    private WulfJobSummaryRepository WulfJobSummaryRepository;
 
     @Autowired
     private PrecinctRepository precinctRepository;
+
+    @Autowired
+    private GeometryRepository geometryRepository;
 
     @Autowired
     private StateRepository stateRepository;
@@ -52,7 +52,7 @@ public class StateController {
     @GetMapping("/states/{stateId}/jobs")
     public List<Job> getJobs(@PathVariable Long stateId) {
 
-        return SWJobRepository.findAllByStateId(stateId);
+        return WulfJobRepository.findAllByStateId(stateId);
     }
 
     @GetMapping("/states/{stateId}/incumbents")
@@ -86,7 +86,7 @@ public class StateController {
     @GetMapping("/states/{stateId}/job-summaries")
     public List<JobSummary> getJobSummariesByState(@PathVariable Long stateId) {
 
-        return SWJobSummaryRepository.findByStateId(stateId);
+        return WulfJobSummaryRepository.findByStateId(stateId);
     }
 
     @GetMapping("/states/state-summaries")
@@ -117,6 +117,18 @@ public class StateController {
     public JSONObject getPrecinctGeometries(@PathVariable Long stateId) throws IOException, ParseException {
 
         return geometryCalculation.calculatePrecinctGeometry(stateId);
+    }
+
+    @GetMapping("/states/{stateId}/precinct-json")
+    public JSONObject getPrecinctJson(@PathVariable Long stateId){
+
+        JSONObject precinctsJson = new JSONObject();
+
+        for(PrecinctGeometry precinctGeometry: geometryRepository.findAllByStateId(stateId)){
+            precinctsJson.put(precinctGeometry.getPrecinctId(), precinctGeometry.getGeometry());
+        }
+
+        return precinctsJson;
     }
 
 //    TODO: implement a maxMMDistricts for a districting (enacted)

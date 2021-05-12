@@ -6,15 +6,22 @@ import javax.persistence.*;
 @Table(name = "job")
 public class JobSummary {
 
-    private Long jobId;
-    private String name;
-    private Integer numberDistrictings;
-    private Integer coolingPeriod;
-    private Integer numberRounds;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "job_id")
+    private Long jobId;
+    private String name;
+    @Column(name = "cooling_periods")
+    private Integer coolingPrediods;
+    @Column(name = "number_rounds")
+    private Integer numberRounds;
+    @Column(name = "number_runs")
+    private Integer numberRuns;
+    @Column(name = "max_pop_diff_percentage")
+    private Double maxPopDiffPercentage;
+    @Column(name = "number_districtings")
+    private Integer numberDistrictings;
+
     public Long getJobId() {
         return jobId;
     }
@@ -31,7 +38,6 @@ public class JobSummary {
         this.name = name;
     }
 
-    @Column(name = "number_districtings")
     public Integer getNumberDistrictings() {
         return numberDistrictings;
     }
@@ -40,16 +46,30 @@ public class JobSummary {
         this.numberDistrictings = numberDistrictings;
     }
 
-    @Column(name = "cooling_period")
-    public Integer getCoolingPeriod() {
-        return coolingPeriod;
+    public Integer getCoolingPrediods() {
+        return coolingPrediods;
     }
 
-    public void setCoolingPeriod(Integer coolingPeriod) {
-        this.coolingPeriod = coolingPeriod;
+    public void setCoolingPrediods(Integer coolingPrediods) {
+        this.coolingPrediods = coolingPrediods;
     }
 
-    @Column(name = "number_rounds")
+    public Integer getNumberRuns() {
+        return numberRuns;
+    }
+
+    public void setNumberRuns(Integer numberRuns) {
+        this.numberRuns = numberRuns;
+    }
+
+    public Double getMaxPopDiffPercentage() {
+        return maxPopDiffPercentage;
+    }
+
+    public void setMaxPopDiffPercentage(Double maxPopDiffPercentage) {
+        this.maxPopDiffPercentage = maxPopDiffPercentage;
+    }
+
     public Integer getNumberRounds() {
         return numberRounds;
     }
@@ -63,9 +83,11 @@ public class JobSummary {
         return "JobSummary{" +
                 "jobId=" + jobId +
                 ", name='" + name + '\'' +
-                ", numberDistrictings=" + numberDistrictings +
-                ", coolingPeriod=" + coolingPeriod +
+                ", coolingPrediods=" + coolingPrediods +
                 ", numberRounds=" + numberRounds +
+                ", numberRuns=" + numberRuns +
+                ", maxPopDiffPercentage=" + maxPopDiffPercentage +
+                ", numberDistrictings=" + numberDistrictings +
                 '}';
     }
 }
