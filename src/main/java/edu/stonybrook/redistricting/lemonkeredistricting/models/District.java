@@ -31,7 +31,9 @@ public class District {
     )
     private Collection<Precinct> precincts;
 
-    /** Getters Setters */
+    /**
+     * Getters Setters
+     */
     public Long getDistrictId() {
         return districtId;
     }
@@ -56,7 +58,9 @@ public class District {
         this.precincts = precincts;
     }
 
-    /** Calculated Methods */
+    /**
+     * Calculated Methods
+     */
     @Transient
     @JsonIgnore
     public Map<Ethnicity, Boolean> isMajorityMinority() {
@@ -122,6 +126,17 @@ public class District {
         return geometryCollection.union().getBoundary();
     }
 
+    @Transient
+    @JsonIgnore
+    public Double getPerimeter() {
+        return getGeometry().getLength();
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getArea() {
+        return getGeometry().getArea();
+    }
 
     @Override
     public String toString() {

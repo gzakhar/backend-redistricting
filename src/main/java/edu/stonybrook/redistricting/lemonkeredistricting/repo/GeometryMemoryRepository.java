@@ -1,8 +1,5 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.repo;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.ParseException;
 import org.locationtech.jts.io.geojson.GeoJsonReader;
@@ -29,7 +26,7 @@ public class GeometryMemoryRepository {
         precinctGeometryMap = new HashMap<>();
 
 //        TODO: only getting Nevada.
-        geometryRepository.findAllByStateId(4).forEach(p -> {
+        geometryRepository.findAll().forEach(p -> {
             try {
                 Geometry geometry = reader.read(p.getGeometry().toString());
                 precinctGeometryMap.put(p.getPrecinctId(), geometry);

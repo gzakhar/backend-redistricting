@@ -62,4 +62,13 @@ public class DistrictController {
         return GeometryCalculation.geometry2Json(geometry);
     }
 
+    @GetMapping("/districts/{districtId}/perimeter")
+    public Double getPerimeter(@PathVariable Long districtId){
+        return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).getPerimeter();
+    }
+
+    @GetMapping("/districts/{districtId}/area")
+    public Double getArea(@PathVariable Long districtId){
+        return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).getArea();
+    }
 }

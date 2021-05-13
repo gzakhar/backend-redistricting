@@ -12,7 +12,7 @@ public class JobSummary {
     private Long jobId;
     private String name;
     @Column(name = "cooling_periods")
-    private Integer coolingPrediods;
+    private Integer coolingPeriods;
     @Column(name = "number_rounds")
     private Integer numberRounds;
     @Column(name = "number_runs")
@@ -46,12 +46,12 @@ public class JobSummary {
         this.numberDistrictings = numberDistrictings;
     }
 
-    public Integer getCoolingPrediods() {
-        return coolingPrediods;
+    public Integer getCoolingPeriods() {
+        return coolingPeriods;
     }
 
-    public void setCoolingPrediods(Integer coolingPrediods) {
-        this.coolingPrediods = coolingPrediods;
+    public void setCoolingPeriods(Integer coolingPeriods) {
+        this.coolingPeriods = coolingPeriods;
     }
 
     public Integer getNumberRuns() {
@@ -83,7 +83,7 @@ public class JobSummary {
         return "JobSummary{" +
                 "jobId=" + jobId +
                 ", name='" + name + '\'' +
-                ", coolingPrediods=" + coolingPrediods +
+                ", coolingPrediods=" + coolingPeriods +
                 ", numberRounds=" + numberRounds +
                 ", numberRuns=" + numberRuns +
                 ", maxPopDiffPercentage=" + maxPopDiffPercentage +
