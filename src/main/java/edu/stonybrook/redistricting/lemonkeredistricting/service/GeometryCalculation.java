@@ -180,14 +180,23 @@ public class GeometryCalculation {
 //        TODO: Im assuming that here @Harlam is attempting to get rid of the geometry that isnt needed. this should be looked at again.
         try {
             JSONObject json = (JSONObject) parser.parse(writer.write(geometry));
-            JSONArray cdn = (JSONArray) json.get("coordinates");
+            JSONArray coordinates = (JSONArray) json.get("coordinates");
             if (((String) json.get("type")).equals("MultiPolygon")) {
-                cdn = (JSONArray) cdn.get(0);
+                coordinates = (JSONArray) coordinates.get(0);
             }
             JSONObject outGeometry = new JSONObject();
-            outGeometry.put("coordinates", cdn);
+            outGeometry.put("coordinates", coordinates);
             outGeometry.put("type", "Polygon");
-            return outGeometry;
+
+            JSONObject feature = new JSONObject();
+            feature.put("geometry", outGeometry);
+            feature.put("type", "Feature");
+            feature.put("properties", new JSONObject());
+
+
+
+            return feature;
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
