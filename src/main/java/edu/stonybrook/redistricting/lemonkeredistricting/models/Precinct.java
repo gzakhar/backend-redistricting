@@ -293,6 +293,7 @@ public class Precinct {
     @Transient
     @JsonIgnore
     public Geometry getGeometry() {
+
         return GeometryMemoryRepository.getPrecinctGeometry(this.precinctId);
     }
 

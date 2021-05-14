@@ -131,6 +131,11 @@ public class StateController {
         return precinctsJson;
     }
 
+    @GetMapping("/states/{stateId}/geometry-union")
+    public JSONObject getGeometryUnion(@PathVariable Long stateId){
+        return StateMemoryRepository.getStateGeometry(stateId);
+    }
+
 //    TODO: implement a maxMMDistricts for a districting (enacted)
 //    @GetMapping("/states/{id}/max-mm-districts")
 //    public List<StateSummary> getMaximumMMDistricts() {
