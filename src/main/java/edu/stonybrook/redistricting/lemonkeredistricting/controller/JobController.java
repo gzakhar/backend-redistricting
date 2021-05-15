@@ -67,21 +67,38 @@ public class JobController {
     }
 
     @GetMapping("/jobs/{jobId}/compactness-constraints")
-    public Map<CompactnessType, Object> getCompactnessConstraints(@PathVariable Long jobId){
+    public Map<CompactnessType, Object> getCompactnessConstraints(@PathVariable Long jobId) {
 
         return constraintsBuilder.buildCompactnessConstraintsArray(jobId);
     }
 
     @GetMapping("/jobs/{jobId}/population-constraints")
-    public Map<PopulationType, Object> getPopulationConstraints(@PathVariable Long jobId){
-        
+    public Map<PopulationType, Object> getPopulationConstraints(@PathVariable Long jobId) {
+
         return constraintsBuilder.buildPopulationConstraintsArray(jobId);
     }
 
     @GetMapping("/jobs/{jobId}/districting-summaries")
-    public List<DistrictingSummary> getDistrictingSummaries(@PathVariable Long jobId){
+    public List<DistrictingSummary> getDistrictingSummaries(@PathVariable Long jobId) {
 
         return districtingSummaryRepository.findDistrictingSummaryByJobId(jobId);
+    }
+
+    @GetMapping("/jobs/{jobId}/constrain-job")
+    public List<DistrictingSummary> getConstrainedDistrictingSummaries(@PathVariable Long jobId,
+                                                                       @RequestParam CompactnessType compactnessType,
+                                                                       @RequestParam Double compactnessValue,
+                                                                       @RequestParam Integer mmDistricts,
+                                                                       @RequestParam PopulationType populationType,
+                                                                       @RequestParam Double populationValue) {
+
+        return constraintsBuilder.constrainJob(jobId,
+                null,
+                compactnessType,
+                compactnessValue,
+                mmDistricts,
+                populationType,
+                populationValue);
     }
 
 

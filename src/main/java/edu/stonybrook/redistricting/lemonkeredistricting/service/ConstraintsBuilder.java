@@ -83,7 +83,8 @@ public class ConstraintsBuilder {
         return districtingSummaryRepository
                 .findDistrictingSummaryByJobId(jobId)
                 .stream()
-                .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) < compactnessValue)
+                .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) >= compactnessValue)
+                .filter(summary -> summary.getPopulationByPopulationType(populationType) <= populationValue)
                 .collect(Collectors.toList());
     }
 

@@ -63,8 +63,7 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
                         .getTotalPopulation(populationType);
                 double totalPopulation = districting.getTotalPopulation(populationType);
 
-
-                double popDifference = (mostPopulousPopulation - leastPopulousPopulaton) / totalPopulation;
+                double popDifference = Math.abs(mostPopulousPopulation - leastPopulousPopulaton) / totalPopulation;
 
                 populationEquality.put(populationType, popDifference);
             } else {

@@ -79,20 +79,6 @@ public class Job {
         this.districtings = districtings;
     }
 
-    @Transient
-    @JsonIgnore
-    public Map<CompactnessType, Object> getCompactnessConstraintArray(){
-
-        return ConstraintsBuilder.buildCompactnessConstraintsArray(jobId);
-    }
-
-    @Transient
-    @JsonIgnore
-    public Map<PopulationType, Object> getPopulationConstraintArray(){
-
-        return ConstraintsBuilder.buildPopulationConstraintsArray(jobId);
-    }
-
     @Override
     public String toString() {
         return "Job{" +
