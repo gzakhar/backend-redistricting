@@ -1,12 +1,10 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.models.CompactnessType;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.DistrictingSummary;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Job;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.WulfJobRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.ConstraintsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +26,9 @@ public class JobController {
 
     @Autowired
     private DistrictingSummaryRepository districtingSummaryRepository;
+
+    @Autowired
+    private ConstraintsBuilder constraintsBuilder;
 
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
@@ -68,16 +69,13 @@ public class JobController {
     @GetMapping("/jobs/{jobId}/compactness-constraints")
     public Map<CompactnessType, Object> getCompactnessConstraints(@PathVariable Long jobId){
 
-        return Objects
-                .requireNonNull(WulfJobRepository.findById(jobId).orElse(null))
-                .getCompactnessConstraintArray();
+        return constraintsBuilder.buildCompactnessConstraintsArray(jobId);
     }
 
     @GetMapping("/jobs/{jobId}/population-constraints")
-    public Map<CompactnessType, Object> getPopulationConstraints(@PathVariable Long jobId){
-
-        return Objects.requireNonNull(WulfJobRepository.findById(jobId).orElse(null))
-                .getCompactnessConstraintArray();
+    public Map<PopulationType, Object> getPopulationConstraints(@PathVariable Long jobId){
+        
+        return constraintsBuilder.buildPopulationConstraintsArray(jobId);
     }
 
     @GetMapping("/jobs/{jobId}/districting-summaries")
@@ -85,4 +83,6 @@ public class JobController {
 
         return districtingSummaryRepository.findDistrictingSummaryByJobId(jobId);
     }
+
+
 }

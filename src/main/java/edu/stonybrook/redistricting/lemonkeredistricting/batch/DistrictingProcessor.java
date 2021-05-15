@@ -26,6 +26,12 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
         Long count = (long) districting.getDistricts().size();
         districtingSummary.setDistrictCount(count);
 
+//        Map of Compactness Measures.
+        districtingSummary.setGeometricCompactness(districting.getGeometricCompactness());
+        districtingSummary.setGraphCompactness(null);
+        districtingSummary.setPopulationCompactness(null);
+
+
 //        Map of mm Districts by Ethnicity.
         Map<Ethnicity, Integer> mmDistricts = new HashMap<>();
         for (Ethnicity e : Ethnicity.values()) {

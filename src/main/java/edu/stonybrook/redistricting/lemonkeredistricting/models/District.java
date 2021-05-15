@@ -146,7 +146,7 @@ public class District {
     @JsonIgnore
     public Double getArea() {
 
-        return getGeometry().getBoundary().getArea();
+        return getGeometry().getArea();
     }
 
     @Transient

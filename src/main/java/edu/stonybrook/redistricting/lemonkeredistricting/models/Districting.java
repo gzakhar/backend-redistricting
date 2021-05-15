@@ -157,17 +157,9 @@ public class Districting {
 
         double compactness = districts.stream()
                 .map(district ->
-                        ((4 * Math.PI) * (1 / Math.pow(district.getPerimeter(), 2))))
+                        ((4 * Math.PI) * (district.getArea() / Math.pow(district.getPerimeter(), 2))))
                 .reduce(0.0, Double::sum);
         return compactness / districts.size();
-
-//        double compactness = 0;
-//        for (District district : districts) {
-//
-////            compactness += (4 * Math.PI) * (district.getArea()/ Math.pow(district.getPerimeter(), 2));
-//            compactness += (4 * Math.PI) * (1 / Math.pow(district.getPerimeter(), 2));
-//        }
-//        return compactness / districts.size();
     }
 
     @Transient
@@ -188,7 +180,10 @@ public class Districting {
         return output;
     }
 
+    @Transient
+    @JsonIgnore
     public Integer getNumberPrecincts() {
+
         return districts.stream().map(District::getNumberPrecincts).reduce(0, Integer::sum);
     }
 
