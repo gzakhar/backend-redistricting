@@ -5,6 +5,7 @@ import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingReposit
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.WulfJobRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.ConstraintsBuilder;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.ObjectiveFunctionCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,9 @@ public class JobController {
 
     @Autowired
     private ConstraintsBuilder constraintsBuilder;
+
+    @Autowired
+    private ObjectiveFunctionCalculator objectiveFunctionCalculator;
 
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
@@ -102,4 +106,10 @@ public class JobController {
     }
 
 
+
+    @GetMapping("")
+    public List<DistrictingScore> getObjScores(){
+
+        return objectiveFunctionCalculator.calculateObjectiveFunction();
+    }
 }
