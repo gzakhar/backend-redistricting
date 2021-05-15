@@ -1,14 +1,19 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
+import edu.stonybrook.redistricting.lemonkeredistricting.models.CompactnessType;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.DistrictingSummary;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Job;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.WulfJobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +25,9 @@ public class JobController {
 
     @Autowired
     private WulfJobRepository WulfJobRepository;
+
+    @Autowired
+    private DistrictingSummaryRepository districtingSummaryRepository;
 
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
@@ -55,5 +63,26 @@ public class JobController {
         }
 
         throw new IllegalArgumentException("Error setAttribute jobId: " + jobId);
+    }
+
+    @GetMapping("/jobs/{jobId}/compactness-constraints")
+    public Map<CompactnessType, Object> getCompactnessConstraints(@PathVariable Long jobId){
+
+        return Objects
+                .requireNonNull(WulfJobRepository.findById(jobId).orElse(null))
+                .getCompactnessConstraintArray();
+    }
+
+    @GetMapping("/jobs/{jobId}/population-constraints")
+    public Map<CompactnessType, Object> getPopulationConstraints(@PathVariable Long jobId){
+
+        return Objects.requireNonNull(WulfJobRepository.findById(jobId).orElse(null))
+                .getCompactnessConstraintArray();
+    }
+
+    @GetMapping("/jobs/{jobId}/districting-summaries")
+    public List<DistrictingSummary> getDistrictingSummaries(@PathVariable Long jobId){
+
+        return districtingSummaryRepository.findDistrictingSummaryByJobId(jobId);
     }
 }

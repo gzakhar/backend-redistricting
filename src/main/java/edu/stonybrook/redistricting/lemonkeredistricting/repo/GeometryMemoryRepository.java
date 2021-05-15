@@ -7,25 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class GeometryMemoryRepository {
-
-    private static Map<Long, Geometry> precinctGeometryMap;
 
     @Autowired
     private GeometryRepository geometryRepository;
 
     private static final GeoJsonReader reader = new GeoJsonReader();
 
+    private static Map<Long, Geometry> precinctGeometryMap;
+
     @PostConstruct
     private void construct() {
 
-        precinctGeometryMap = new HashMap<>();
+        precinctGeometryMap = new ConcurrentHashMap<>();
 
-//        TODO: only getting Nevada.
         geometryRepository.findAll().forEach(p -> {
             try {
                 Geometry geometry = reader.read(p.getGeometry().toString());
@@ -40,5 +39,4 @@ public class GeometryMemoryRepository {
 
         return precinctGeometryMap.get(precinctId);
     }
-
 }

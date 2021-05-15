@@ -47,8 +47,8 @@ public class BatchController {
     }
 
     @GetMapping("/absent-summaries")
-    public Long getAbsentSummaryIds(){
+    public List<Long> getAbsentSummaryIds(){
 
-        return Objects.requireNonNull(districtingSummaryRepository.findAbsentDistrictingSummaryId().orElse(null));
+        return districtingSummaryRepository.findAbsentDistrictingSummaryId();
     }
 }

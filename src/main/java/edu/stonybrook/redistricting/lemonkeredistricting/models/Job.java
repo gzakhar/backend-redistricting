@@ -1,7 +1,12 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.ConstraintsBuilder;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 public class Job {
@@ -72,6 +77,20 @@ public class Job {
 
     public void setDistrictings(Collection<Districting> districtings) {
         this.districtings = districtings;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Map<CompactnessType, Object> getCompactnessConstraintArray(){
+
+        return ConstraintsBuilder.buildCompactnessConstraintsArray(jobId);
+    }
+
+    @Transient
+    @JsonIgnore
+    public Map<PopulationType, Object> getPopulationConstraintArray(){
+
+        return ConstraintsBuilder.buildPopulationConstraintsArray(jobId);
     }
 
     @Override

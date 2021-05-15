@@ -4,14 +4,11 @@ import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.NonTransientResourceException;
-import org.springframework.batch.item.ParseException;
-import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Objects;
+import javax.annotation.PostConstruct;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class DistrictingItemReader implements ItemReader<Districting> {
@@ -22,15 +19,20 @@ public class DistrictingItemReader implements ItemReader<Districting> {
     @Autowired
     private DistrictingRepository districtingRepository;
 
-//    private final static ArrayList<Long> ids = (ArrayList<Long>) districtingSummaryRepository.findAbsentDistrictingSummaryIds();
-//    private int pointer = 0;
+    private Iterator<Long> iterator;
+
+    @PostConstruct
+    public void init() {
+        List<Long> absentid = districtingSummaryRepository.findAbsentDistrictingSummaryId();
+        iterator = absentid.iterator();
+    }
 
     @Override
-    public Districting read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+    public Districting read() {
 
-        Long absentid = districtingSummaryRepository.findAbsentDistrictingSummaryId().orElse(null);
-        if (absentid != null) return districtingRepository.findById(absentid).orElse(null);
-
-        return null;
+        if (iterator.hasNext())
+            return districtingRepository.findById(iterator.next()).orElse(null);
+        else
+            return null;
     }
 }

@@ -122,20 +122,17 @@ public class District {
     @JsonIgnore
     public Geometry getGeometry() {
 
-//        Geometry[] geometryArray = new Geometry[precincts.size()];
+        List<Geometry> geometryList = getPrecinctList()
+                .parallelStream()
+                .map(Precinct::getGeometry)
+                .collect(Collectors.toList());
 
-//        int i = 0;
-//        for (Precinct p : precincts) {
-//            geometryArray[i++] = p.getGeometry();
-//        }
-//        GeometryCollection geometryCollection = new GeometryCollection(geometryArray, new GeometryFactory());
+        GeometryCollection geometryCollection = new GeometryCollection(
+                geometryList
+                        .toArray(new Geometry[precincts.size()]),
+                new GeometryFactory());
 
-        List<Geometry> geometryList = getPrecinctList().stream().map(Precinct::getGeometry).collect(Collectors.toList());
-
-        GeometryCollection geometryCollection = new GeometryCollection(geometryList.toArray(new Geometry[precincts.size()]), new GeometryFactory());
-
-
-        return geometryCollection.union().getBoundary();
+        return geometryCollection.union();
     }
 
     @Transient

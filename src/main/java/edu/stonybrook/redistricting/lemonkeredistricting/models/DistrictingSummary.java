@@ -1,5 +1,6 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 
 import javax.persistence.*;
@@ -181,6 +182,38 @@ public class DistrictingSummary {
 
     public void setCvaPopulation(Double cvaPopulation) {
         this.cvaPopulation = cvaPopulation;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getCompactnessByCompactnessType(CompactnessType compactnessType){
+
+        switch (compactnessType) {
+            case GEOMETRIC:
+                return getGeometricCompactness();
+            case GRAPH:
+                return getGraphCompactness();
+            case POPULATION:
+                return getPopulationCompactness();
+            default:
+                return null;
+        }
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getPopulationByPopulationType(PopulationType populationType){
+
+        switch (populationType) {
+            case TOTAL_POPULATION:
+                return getTotalPopulation();
+            case VOTING_AGE_POPULATION:
+                return getVaPopulation();
+            case CITIZEN_VOTING_AGE_POPULATION:
+                return getCvaPopulation();
+            default:
+                return null;
+        }
     }
 
     @Override
