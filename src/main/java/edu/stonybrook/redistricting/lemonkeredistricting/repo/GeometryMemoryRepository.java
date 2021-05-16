@@ -34,6 +34,7 @@ public class GeometryMemoryRepository {
                 Long precinctId = Long.parseLong(values[1]);
                 precinctGeometryMap.put(precinctId, geometry);
             }
+            inputStream.close();
         } catch (IOException | CsvValidationException | org.locationtech.jts.io.ParseException e) {
             e.printStackTrace();
         }
