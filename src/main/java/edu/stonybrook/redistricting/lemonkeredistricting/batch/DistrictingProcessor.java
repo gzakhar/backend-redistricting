@@ -83,23 +83,6 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
 
             List<District> districtsOrderedList = districting.orderDistrictsByPopulationType(populationType);
 
-//            if (districting.getPopulationTypeAvailablability().get(populationType)) {
-//
-////                Find the population difference between most and least populous districts.
-//                double mostPopulousPopulation = districtsOrderedList
-//                        .get(0)
-//                        .getTotalPopulation(populationType);
-//                double leastPopulousPopulaton = districtsOrderedList
-//                        .get(districtsOrderedList.size() - 1)
-//                        .getTotalPopulation(populationType);
-//                double totalPopulation = districting.getTotalPopulation(populationType);
-//
-//                double popDifference = Math.abs(mostPopulousPopulation - leastPopulousPopulaton) / totalPopulation;
-//
-//                populationEquality.put(populationType, popDifference);
-//            } else {
-//                populationEquality.put(populationType, null);
-//            }
         }
 
 
