@@ -56,7 +56,7 @@ public class ConstraintsBuilder {
             List<List<Long>> constraintList = new ArrayList<>(100);
             for (DistrictingSummary districtingSummary : districtingSummaryRepository.findDistrictingSummaryByJobId(jobId)) {
 
-                int index = (int) (100 * districtingSummary.getPopulationByPopulationType(populationType));
+                int index = (int) (100 * districtingSummary.getPopulationDifferenceByPopulationType(populationType));
                 long id = districtingSummary.getDistrictingSummaryId();
 
                 List<Long> indexArray = constraintList.get(index);
@@ -84,7 +84,7 @@ public class ConstraintsBuilder {
                 .findDistrictingSummaryByJobId(jobId)
                 .stream()
                 .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) >= compactnessValue)
-                .filter(summary -> summary.getPopulationByPopulationType(populationType) <= populationValue)
+                .filter(summary -> summary.getPopulationDifferenceByPopulationType(populationType) <= populationValue)
                 .collect(Collectors.toList());
     }
 

@@ -110,6 +110,7 @@ public class JobController {
     @GetMapping("")
     public List<DistrictingScore> getObjScores(){
 
-        return objectiveFunctionCalculator.calculateObjectiveFunction();
+//        return objectiveFunctionCalculator.calculateObjectiveFunction();
+        return null;
     }
 }

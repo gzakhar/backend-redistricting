@@ -46,8 +46,8 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
         districtingSummary.setMmOther((long) mmDistricts.getOrDefault(Ethnicity.OTHER, null));
 
 
-//        Population Equality Map. (percent difference between the most populous district and the least populous district)
-        Map<PopulationType, Double> populationEquality = new HashMap<>();
+//        Population Difference Map. (percent difference between the most populous district and the least populous district)
+        Map<PopulationType, Double> populationDifference = new HashMap<>();
 
         for (PopulationType populationType : PopulationType.values()) {
 
@@ -65,15 +65,43 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
 
                 double popDifference = Math.abs(mostPopulousPopulation - leastPopulousPopulaton) / totalPopulation;
 
-                populationEquality.put(populationType, popDifference);
+                populationDifference.put(populationType, popDifference);
             } else {
-                populationEquality.put(populationType, null);
+                populationDifference.put(populationType, null);
             }
         }
 
-        districtingSummary.setTotalPopulation(populationEquality.getOrDefault(PopulationType.TOTAL_POPULATION, null));
-        districtingSummary.setVaPopulation(populationEquality.getOrDefault(PopulationType.VOTING_AGE_POPULATION, null));
-        districtingSummary.setCvaPopulation(populationEquality.getOrDefault(PopulationType.CITIZEN_VOTING_AGE_POPULATION, null));
+        districtingSummary.setTotalPopulation(populationDifference.getOrDefault(PopulationType.TOTAL_POPULATION, null));
+        districtingSummary.setVaPopulation(populationDifference.getOrDefault(PopulationType.VOTING_AGE_POPULATION, null));
+        districtingSummary.setCvaPopulation(populationDifference.getOrDefault(PopulationType.CITIZEN_VOTING_AGE_POPULATION, null));
+
+
+//        Population Equality Map. (____________)
+        Map<PopulationType, Double> populationEquality = new HashMap<>();
+
+        for (PopulationType populationType : PopulationType.values()) {
+
+            List<District> districtsOrderedList = districting.orderDistrictsByPopulationType(populationType);
+
+//            if (districting.getPopulationTypeAvailablability().get(populationType)) {
+//
+////                Find the population difference between most and least populous districts.
+//                double mostPopulousPopulation = districtsOrderedList
+//                        .get(0)
+//                        .getTotalPopulation(populationType);
+//                double leastPopulousPopulaton = districtsOrderedList
+//                        .get(districtsOrderedList.size() - 1)
+//                        .getTotalPopulation(populationType);
+//                double totalPopulation = districting.getTotalPopulation(populationType);
+//
+//                double popDifference = Math.abs(mostPopulousPopulation - leastPopulousPopulaton) / totalPopulation;
+//
+//                populationEquality.put(populationType, popDifference);
+//            } else {
+//                populationEquality.put(populationType, null);
+//            }
+        }
+
 
         log.info("Converted (" + id + ")");
 

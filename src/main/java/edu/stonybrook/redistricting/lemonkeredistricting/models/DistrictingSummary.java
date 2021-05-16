@@ -52,10 +52,20 @@ public class DistrictingSummary {
     @Column(name = "cva_population")
     private Double cvaPopulation;
 
+    @Column(name = "total_population_equality")
+    private Double totalPopulationEquality;
+
+    @Column(name = "va_population_equality")
+    private Double vaPopulationEquality;
+
+    @Column(name = "cva_population_equality")
+    private Double cvaPopulationEquality;
+
+
     public DistrictingSummary() {
     }
 
-    public DistrictingSummary(Long districtingSummaryId, Long districtCount, Double geometricCompactness, Double graphCompactness, Double populationCompactness, Long mmWhite, Long mmBlack, Long mmHispanic, Long mmAsian, Long mmAmind, Long mmOther, Double totalPopulation, Double vaPopulation, Double cvaPopulation) {
+    public DistrictingSummary(Long districtingSummaryId, Long districtCount, Double geometricCompactness, Double graphCompactness, Double populationCompactness, Long mmWhite, Long mmBlack, Long mmHispanic, Long mmAsian, Long mmAmind, Long mmOther, Double totalPopulation, Double vaPopulation, Double cvaPopulation, Double totalPopulationEquality, Double vaPopulationEquality, Double cvaPopulationEquality) {
         this.districtingSummaryId = districtingSummaryId;
         this.districtCount = districtCount;
         this.geometricCompactness = geometricCompactness;
@@ -70,6 +80,9 @@ public class DistrictingSummary {
         this.totalPopulation = totalPopulation;
         this.vaPopulation = vaPopulation;
         this.cvaPopulation = cvaPopulation;
+        this.totalPopulationEquality = totalPopulationEquality;
+        this.vaPopulationEquality = vaPopulationEquality;
+        this.cvaPopulationEquality = cvaPopulationEquality;
     }
 
     public Long getDistrictingSummaryId() {
@@ -184,6 +197,30 @@ public class DistrictingSummary {
         this.cvaPopulation = cvaPopulation;
     }
 
+    public Double getTotalPopulationEquality() {
+        return totalPopulationEquality;
+    }
+
+    public void setTotalPopulationEquality(Double totalPopulationEquality) {
+        this.totalPopulationEquality = totalPopulationEquality;
+    }
+
+    public Double getVaPopulationEquality() {
+        return vaPopulationEquality;
+    }
+
+    public void setVaPopulationEquality(Double vaPopulationEquality) {
+        this.vaPopulationEquality = vaPopulationEquality;
+    }
+
+    public Double getCvaPopulationEquality() {
+        return cvaPopulationEquality;
+    }
+
+    public void setCvaPopulationEquality(Double cvaPopulationEquality) {
+        this.cvaPopulationEquality = cvaPopulationEquality;
+    }
+
     @Transient
     @JsonIgnore
     public Double getCompactnessByCompactnessType(CompactnessType compactnessType){
@@ -202,7 +239,7 @@ public class DistrictingSummary {
 
     @Transient
     @JsonIgnore
-    public Double getPopulationByPopulationType(PopulationType populationType){
+    public Double getPopulationDifferenceByPopulationType(PopulationType populationType){
 
         switch (populationType) {
             case TOTAL_POPULATION:
@@ -214,6 +251,13 @@ public class DistrictingSummary {
             default:
                 return null;
         }
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getPopulationEqualityByPopulationType(PopulationType populationType){
+
+        return null;
     }
 
     @Override
