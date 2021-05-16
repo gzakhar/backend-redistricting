@@ -83,27 +83,27 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
 
             List<District> districtsOrderedList = districting.orderDistrictsByPopulationType(populationType);
 
-//            if (districting.getPopulationTypeAvailablability().get(populationType)) {
-//
-////                Find the population difference between most and least populous districts.
-//                double mostPopulousPopulation = districtsOrderedList
-//                        .get(0)
-//                        .getTotalPopulation(populationType);
-//                double leastPopulousPopulaton = districtsOrderedList
-//                        .get(districtsOrderedList.size() - 1)
-//                        .getTotalPopulation(populationType);
-//                double totalPopulation = districting.getTotalPopulation(populationType);
-//
-//                double popDifference = Math.abs(mostPopulousPopulation - leastPopulousPopulaton) / totalPopulation;
-//
-//                populationEquality.put(populationType, popDifference);
-//            } else {
-//                populationEquality.put(populationType, null);
-//            }
+            if (districting.getPopulationTypeAvailablability().get(populationType)) {
+
+                Integer idealPopulation = districting.getTotalPopulation(populationType) / districtsOrderedList.size();
+                Double sum = 0.0;
+                for (District district : districtsOrderedList){
+                    sum += Math.pow((district.getTotalPopulation(populationType)/idealPopulation) - 1, 2);
+                }
+                Double populationEqualityScore = Math.sqrt(sum);
+                System.out.println(populationEqualityScore);
+                populationEquality.put(populationType, populationEqualityScore);
+            } else {
+                populationEquality.put(populationType, null);
+            }
         }
 
+        districtingSummary.setTotalPopulationEquality(populationEquality.getOrDefault(PopulationType.TOTAL_POPULATION, null));
+        districtingSummary.setVaPopulationEquality(populationEquality.getOrDefault(PopulationType.VOTING_AGE_POPULATION, null));
+        districtingSummary.setCvaPopulationEquality(populationEquality.getOrDefault(PopulationType.CITIZEN_VOTING_AGE_POPULATION, null));
 
         log.info("Converted (" + id + ")");
+
 
         return districtingSummary;
     }
