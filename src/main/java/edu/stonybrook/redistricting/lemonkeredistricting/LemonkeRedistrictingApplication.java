@@ -14,5 +14,4 @@ public class LemonkeRedistrictingApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LemonkeRedistrictingApplication.class, args);
 	}
-
 }
