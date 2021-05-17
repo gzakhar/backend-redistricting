@@ -3,15 +3,18 @@ package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.GillConstruct;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lemonke")
@@ -26,6 +29,9 @@ public class DistrictingController {
     @Autowired
     private GeometryCalculation geometryCalculation;
 
+    @Autowired
+    private DistrictingSummaryRepository districtingSummaryRepository;
+
     @GetMapping("/districtings")
     public List<Districting> getDistrictings() {
 
@@ -33,23 +39,10 @@ public class DistrictingController {
     }
 
     @GetMapping("/districtings/{districtingId}")
-    public Districting getDistrictingById(HttpSession httpSession, @PathVariable Long districtingId) {
+    public Districting getDistrictingById(@PathVariable Long districtingId) {
 
         return districtingRepository.findById(districtingId).orElse(null);
     }
-
-//    TODO: session not available.
-//    @GetMapping("/districtings/{districtingId}")
-//    public Districting getDistrictingById(HttpSession httpSession, @PathVariable Long districtingId) {
-//
-//        Districting districting = (Districting) httpSession.getAttribute("current-districting");
-//        if(districting == null){
-//            System.out.println("No districting districtingId: " + districtingId + " cached");
-//            districting = districtingRepository.findById(districtingId).orElse(null);
-//        }
-//
-//        return districting;
-//    }
 
     @GetMapping("/districtings/{districtingId}/districts")
     public List<District> getDistrictByDistrictingId(@PathVariable Long districtingId) {
@@ -99,6 +92,103 @@ public class DistrictingController {
         return geometryCalculation.calculateDistrictingGeometry(districtingId);
     }
 
+    @GetMapping("/districtings/{districtingId}/district-order-population")
+    public List<Integer> getDistrictOrderByPopulation(@PathVariable Long districtingId) {
+
+        return Objects.requireNonNull(districtingRepository.findById(districtingId).orElse(null))
+                .getDistrictOrderPopulation()
+                .stream()
+                .map(d -> d.getTotalPopulation(PopulationType.TOTAL_POPULATION))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/districtings/{districtingId}/recombine-enacted")
+    public List<Long> getReorderedDistrictsIds(@PathVariable Long districtingId) {
+
+        Districting enacted = Objects.requireNonNull(
+                districtingRepository
+                        .findEnactedByDistrictingId(districtingId)
+                        .orElse(null));
+        Districting current = Objects.requireNonNull(
+                districtingRepository
+                        .findById(districtingId)
+                        .orElse(null));
+
+        System.out.println("previous order");
+        System.out.println(Arrays.toString(current.getDistricts().stream().map(District::getDistrictId).toArray(Long[]::new)));
+        System.out.println("new order");
+        List<Long> res = current.getDistrictsOrder(enacted).stream().map(District::getDistrictId).collect(Collectors.toList());
+        System.out.println(res.toString());
+        return res;
+    }
+
+    @GetMapping("/districtings/{districtingId}/population-deviation-enacted")
+    public Double getPopulationDeviationFromEnacted(@PathVariable Long districtingId) {
+
+        Districting enacted = Objects.requireNonNull(
+                districtingRepository
+                        .findEnactedByDistrictingId(districtingId)
+                        .orElse(null));
+
+        return Objects.requireNonNull(
+                districtingRepository
+                        .findById(districtingId)
+                        .orElse(null))
+                .getPopulationDeviationFromDistricting(enacted);
+    }
+
+    @GetMapping("/districtings/{districtingId}/area-deviation-enacted")
+    public Double getAreaDeviationFromEnacted(@PathVariable Long districtingId) {
+
+        Districting enacted = Objects.requireNonNull(
+                districtingRepository
+                        .findEnactedByDistrictingId(districtingId)
+                        .orElse(null));
+
+
+        return Objects.requireNonNull(
+                districtingRepository
+                        .findById(districtingId)
+                        .orElse(null))
+                .getAreaDeviationFromDistricting(enacted);
+    }
+
+    @GetMapping("/districtings/{districtingId}/enacted")
+    public Districting getEnacted(@PathVariable Long districtingId) {
+
+        return Objects.requireNonNull(
+                districtingRepository
+                        .findEnactedByDistrictingId(districtingId)
+                        .orElse(null)
+        );
+    }
+
+    @GetMapping("/districtings/{districtingId}/geometric-compactness")
+    public Double getGeometricCompactness(@PathVariable Long districtingId){
+
+        return Objects.requireNonNull(districtingRepository.findById(districtingId).orElse(null)).getGeometricCompactness();
+    }
+
+    @GetMapping("/districtings/{districtingId}/summary")
+    public DistrictingSummary getDistrictingSummary(@PathVariable Long districtingId){
+
+        return districtingSummaryRepository.findById(districtingId).orElse(null);
+    }
+
+//    TODO: session not available.
+//    @GetMapping("/districtings/{districtingId}")
+//    public Districting getDistrictingById(HttpSession httpSession, @PathVariable Long districtingId) {
+//
+//        Districting districting = (Districting) httpSession.getAttribute("current-districting");
+//        if(districting == null){
+//            System.out.println("No districting districtingId: " + districtingId + " cached");
+//            districting = districtingRepository.findById(districtingId).orElse(null);
+//        }
+//
+//        return districting;
+//    }
+
+
 //    @GetMapping("/getConstraintCountIncumbent")
 //    public List<Map<String, Object>> getConstraintCountIncumbent(int[] incumbents, int jobId) {
 //        return null;
@@ -141,4 +231,5 @@ public class DistrictingController {
 //                                                                double populationFairness) {
 //        return null;
 //    }
+
 }

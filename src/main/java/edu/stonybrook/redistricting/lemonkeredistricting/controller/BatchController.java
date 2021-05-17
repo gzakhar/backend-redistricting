@@ -1,5 +1,6 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.GeometryMemoryRepository;
 import org.json.simple.JSONObject;
 import org.springframework.batch.core.Job;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.time.Instant;
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/batch")
@@ -24,8 +27,12 @@ public class BatchController {
 
     @Resource
     private JobLauncher jobLauncher;
+
     @Resource
     private Job districtingSummaryGenerationJob;
+
+    @Autowired
+    private DistrictingSummaryRepository districtingSummaryRepository;
 
     @Autowired
     private GeometryMemoryRepository geometryMemoryRepository;
@@ -37,5 +44,11 @@ public class BatchController {
                 new JobParametersBuilder()
                         .addLong("timestamp", Instant.now().getEpochSecond())
                         .toJobParameters());
+    }
+
+    @GetMapping("/absent-summaries")
+    public List<Long> getAbsentSummaryIds(){
+
+        return districtingSummaryRepository.findAbsentDistrictingSummaryId();
     }
 }

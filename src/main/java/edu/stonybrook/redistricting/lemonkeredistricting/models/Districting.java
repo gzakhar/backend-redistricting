@@ -2,6 +2,7 @@ package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.GillConstruct;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import springfox.documentation.spring.web.json.Json;
@@ -21,7 +22,9 @@ public class Districting {
     @OneToMany(mappedBy = "districtingId")
     private Collection<District> districts;
 
-    /** Getters Setters. **/
+    /**
+     * Getters Setters.
+     **/
     public Long getDistrictingId() {
         return districtingId;
     }
@@ -38,7 +41,9 @@ public class Districting {
         this.districts = districts;
     }
 
-    /** Class Functions. **/
+    /**
+     * Class Functions.
+     **/
     @Transient
     @JsonIgnore
     public Integer getMMDistrictCount(Ethnicity ethnicity) {
@@ -93,7 +98,7 @@ public class Districting {
 
     @Transient
     @JsonIgnore
-    public List<Integer[]> getRecombinationJson() {
+    public List<List<Long>> getRecombinationJson() {
 
         return districts.stream()
                 .map(District::getPrecinctIds)
@@ -102,12 +107,59 @@ public class Districting {
 
     @Transient
     @JsonIgnore
-    public List<District> getDistrictsPopulationDesc(PopulationType populationType) {
+    public List<District> getDistrictOrderPopulation() {
+        return districts.stream()
+                .sorted(Comparator.comparingInt(o -> o.getTotalPopulation(PopulationType.TOTAL_POPULATION)))
+                .collect(Collectors.toList());
+    }
+
+    @Transient
+    @JsonIgnore
+    public List<District> getDistrictsOrder(Districting referenceDistricting) {
+
+        return GillConstruct.reorderDistricts(this, referenceDistricting);
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getPopulationDeviationFromDistricting(Districting referenceDistricting) {
+
+        return GillConstruct.populationDifferenceFromDistricting(this, referenceDistricting);
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getAreaDeviationFromDistricting(Districting refrenceDistricting) {
+
+        return GillConstruct.areaDifferenceFromDistricting(this, refrenceDistricting);
+    }
+
+//    @Transient
+//    @JsonIgnore
+//    public List<District> getDistrictOrderGillConstruct(Districting comparatorDistricting){
+//
+//
+//    }
+
+    @Transient
+    @JsonIgnore
+    public List<District> orderDistrictsByPopulationType(PopulationType populationType) {
 
         List<District> orderedDistricts = new ArrayList<>(List.copyOf(districts));
         orderedDistricts.sort(Comparator.comparingInt(o -> o.getTotalPopulation(populationType)));
 
         return orderedDistricts;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getGeometricCompactness() {
+
+        double compactness = districts.stream()
+                .map(district ->
+                        ((4 * Math.PI) * (district.getArea() / Math.pow(district.getPerimeter(), 2))))
+                .reduce(0.0, Double::sum);
+        return compactness / districts.size();
     }
 
     @Transient
@@ -126,6 +178,13 @@ public class Districting {
         output.put("type", "FeatureCollection");
 
         return output;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Integer getNumberPrecincts() {
+
+        return districts.stream().map(District::getNumberPrecincts).reduce(0, Integer::sum);
     }
 
     @Override

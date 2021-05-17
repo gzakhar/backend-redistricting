@@ -12,4 +12,5 @@ public interface WulfJobRepository extends JpaRepository<Job, Long> {
 
     @Query(nativeQuery = true, value="SELECT * FROM Job j where j.state_id = (:id)")
     List<Job> findAllByStateId(Long id);
+
 }

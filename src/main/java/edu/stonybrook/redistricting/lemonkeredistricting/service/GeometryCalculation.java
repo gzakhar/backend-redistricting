@@ -193,8 +193,6 @@ public class GeometryCalculation {
             feature.put("type", "Feature");
             feature.put("properties", new JSONObject());
 
-
-
             return feature;
 
         } catch (ParseException e) {

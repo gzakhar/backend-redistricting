@@ -1,6 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.District;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.DistrictingSummary;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Ethnicity;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictRepository;
@@ -71,4 +72,5 @@ public class DistrictController {
     public Double getArea(@PathVariable Long districtId){
         return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).getArea();
     }
+
 }

@@ -1,14 +1,18 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Job;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.WulfJobRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.ConstraintsBuilder;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.ObjectiveFunctionCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +24,15 @@ public class JobController {
 
     @Autowired
     private WulfJobRepository WulfJobRepository;
+
+    @Autowired
+    private DistrictingSummaryRepository districtingSummaryRepository;
+
+    @Autowired
+    private ConstraintsBuilder constraintsBuilder;
+
+    @Autowired
+    private ObjectiveFunctionCalculator objectiveFunctionCalculator;
 
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
@@ -55,5 +68,49 @@ public class JobController {
         }
 
         throw new IllegalArgumentException("Error setAttribute jobId: " + jobId);
+    }
+
+    @GetMapping("/jobs/{jobId}/compactness-constraints")
+    public Map<CompactnessType, Object> getCompactnessConstraints(@PathVariable Long jobId) {
+
+        return constraintsBuilder.buildCompactnessConstraintsArray(jobId);
+    }
+
+    @GetMapping("/jobs/{jobId}/population-constraints")
+    public Map<PopulationType, Object> getPopulationConstraints(@PathVariable Long jobId) {
+
+        return constraintsBuilder.buildPopulationConstraintsArray(jobId);
+    }
+
+    @GetMapping("/jobs/{jobId}/districting-summaries")
+    public List<DistrictingSummary> getDistrictingSummaries(@PathVariable Long jobId) {
+
+        return districtingSummaryRepository.findDistrictingSummaryByJobId(jobId);
+    }
+
+    @GetMapping("/jobs/{jobId}/constrain-job")
+    public List<DistrictingSummary> getConstrainedDistrictingSummaries(@PathVariable Long jobId,
+                                                                       @RequestParam CompactnessType compactnessType,
+                                                                       @RequestParam Double compactnessValue,
+                                                                       @RequestParam Integer mmDistricts,
+                                                                       @RequestParam PopulationType populationType,
+                                                                       @RequestParam Double populationValue) {
+
+        return constraintsBuilder.constrainJob(jobId,
+                null,
+                compactnessType,
+                compactnessValue,
+                mmDistricts,
+                populationType,
+                populationValue);
+    }
+
+
+
+    @GetMapping("")
+    public List<DistrictingScore> getObjScores(){
+
+//        return objectiveFunctionCalculator.calculateObjectiveFunction();
+        return null;
     }
 }

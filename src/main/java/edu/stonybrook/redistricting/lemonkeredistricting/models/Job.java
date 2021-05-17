@@ -1,7 +1,12 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.ConstraintsBuilder;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 public class Job {

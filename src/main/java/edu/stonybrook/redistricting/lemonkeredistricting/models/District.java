@@ -100,42 +100,60 @@ public class District {
 
         return this.precincts.stream()
                 .map(p -> p.getTotalPopulationType(populationType))
+                .filter(Objects::nonNull)
                 .reduce(0, Integer::sum);
     }
 
     @Transient
     @JsonIgnore
-    public Integer[] getPrecinctIds() {
+    public List<Long> getPrecinctIds() {
 
-        return precincts.stream().map(precinct -> precinct.getPrecinctId().intValue()).toArray(Integer[]::new);
+        return precincts.stream().map(Precinct::getPrecinctId).collect(Collectors.toList());
+    }
+
+    @Transient
+    @JsonIgnore
+    public List<Precinct> getPrecinctList() {
+
+        return new ArrayList<>(precincts);
     }
 
     @Transient
     @JsonIgnore
     public Geometry getGeometry() {
 
-        Geometry[] geometryArray = new Geometry[precincts.size()];
+        List<Geometry> geometryList = getPrecinctList()
+                .parallelStream()
+                .map(Precinct::getGeometry)
+                .collect(Collectors.toList());
 
-        int i = 0;
-        for (Precinct p : precincts) {
-            geometryArray[i++] = p.getGeometry();
-        }
+        GeometryCollection geometryCollection = new GeometryCollection(
+                geometryList
+                        .toArray(new Geometry[precincts.size()]),
+                new GeometryFactory());
 
-        GeometryCollection geometryCollection = new GeometryCollection(geometryArray, new GeometryFactory());
-
-        return geometryCollection.union().getBoundary();
+        return geometryCollection.union();
     }
 
     @Transient
     @JsonIgnore
     public Double getPerimeter() {
+
         return getGeometry().getLength();
     }
 
     @Transient
     @JsonIgnore
     public Double getArea() {
+
         return getGeometry().getArea();
+    }
+
+    @Transient
+    @JsonIgnore
+    public Integer getNumberPrecincts() {
+
+        return precincts.size();
     }
 
     @Override
