@@ -12,10 +12,7 @@ import org.jgrapht.generate.CompleteBipartiteGraphGenerator;
 import org.jgrapht.graph.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.jgrapht.*;
@@ -26,18 +23,18 @@ public class GillConstruct {
     static DistrictingRepository districtingRepository;
 
     public static List<District> reorderDistricts(Districting reorderDistricting, Districting reference) {
+//
+//        double denominator = reorderDistricting.getNumberPrecincts().doubleValue();
+//        List<District> refrenceRecombination = reference.getDistrictOrderPopulation();
+//
+//        List<List<District>> reordering = districtRecombinations(reorderDistricting)
+//                .stream()
+//                .sorted(Comparator.comparingInt(r -> ((int) gillObjectiveFunction(denominator, r, refrenceRecombination))))
+//                .collect(Collectors.toList());
+//
+//        System.out.println(reordering);
 
-        double denominator = reorderDistricting.getNumberPrecincts().doubleValue();
-        List<District> refrenceRecombination = reference.getDistrictOrderPopulation();
-
-        List<List<District>> reordering = districtRecombinations(reorderDistricting)
-                .stream()
-                .sorted(Comparator.comparingInt(r -> ((int) gillObjectiveFunction(denominator, r, refrenceRecombination))))
-                .collect(Collectors.toList());
-
-        System.out.println(reordering);
-
-        return reordering.get(reordering.size() - 1);
+        return null;
     }
 
     public static double populationDifferenceFromDistricting(Districting districting, Districting reference) {
@@ -56,7 +53,7 @@ public class GillConstruct {
                 districting.getDistrictsOrder(reference));
     }
 
-    private static List<List<District>> districtRecombinations(Districting districting) {
+    private static List<District> getDistrictingReordering(Districting districting) {
         Set<District> current = (Set<District>) districting.getDistricts();
         Districting enacted = districtingRepository.findEnactedByDistrictingId(districting.getDistrictingId()).get();
         Set<District> enactedDistricts = (Set<District>) enacted.getDistricts();
@@ -90,15 +87,17 @@ public class GillConstruct {
         //        //number accordingly via population order from enacted
         List<District> enactedPopulationOrdering = enacted.getDistrictOrderPopulation();
 
+        District[] orderedDistricting = new District[districting.getDistrictingCount()];
         for (DefaultWeightedEdge matchingEdge: matchingEdges){
             District enactedDistrict = graph.getEdgeSource(matchingEdge);
             District currentDistrict = graph.getEdgeTarget(matchingEdge);
+
+            orderedDistricting[enactedPopulationOrdering.indexOf(enactedDistrict)] = currentDistrict;
+
         }
+        List<District> reorderedDistricting = Arrays.asList(orderedDistricting.clone());
 
-        List<List<District>> recombination = new ArrayList();
-        recombination.add(districting.getDistrictOrderPopulation());
-
-        return recombination;
+        return reorderedDistricting;
     }
 
     private static double gillObjectiveFunction(Double totalPrecincts, List<District> d1, List<District> d2) {
