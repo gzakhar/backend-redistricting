@@ -5,12 +5,22 @@ import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.PopulationType;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
+import org.jgrapht.alg.matching.MaximumWeightBipartiteMatching;
+import org.jgrapht.generate.CompleteBipartiteGraphGenerator;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultUndirectedGraph;
+import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.jgrapht.*;
 
 public class GillConstruct {
 
@@ -49,6 +59,29 @@ public class GillConstruct {
     }
 
     private static List<List<District>> districtRecombinations(Districting districting) {
+        Set<District> current = (Set<District>) districting.getDistricts();
+        Districting enacted = districtingRepository.findEnactedByDistrictingId(districting.getDistrictingId()).get();
+        Set<District> enactedDistricts = (Set<District>) enacted.getDistricts();
+
+        CompleteBipartiteGraphGenerator<District, DefaultWeightedEdge> graphGenerator = new CompleteBipartiteGraphGenerator<>(
+                enactedDistricts,
+                current
+        );
+        DefaultUndirectedWeightedGraph<District, DefaultWeightedEdge> graph = new DefaultUndirectedWeightedGraph<>(DefaultWeightedEdge.class);
+        graphGenerator.generateGraph(graph);
+
+        MaximumWeightBipartiteMatching<District, DefaultWeightedEdge> matchings = new MaximumWeightBipartiteMatching<>(
+                graph,
+                enactedDistricts,
+                current);
+
+        Set<DefaultWeightedEdge> matchingEdges = matchings.getMatching().getEdges();
+        //        //each edge is connecting enacted district to corresponding current district
+        //        //number accordingly via population order from enacted
+        List<District> enactedPopulationOrdering = enacted.getDistrictOrderPopulation();
+        for (DefaultWeightedEdge edge : matchingEdges){
+            District enactedDistrict = (District) edge.getSource()
+        }
 
         List<List<District>> recombination = new ArrayList();
         recombination.add(districting.getDistrictOrderPopulation());

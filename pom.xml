@@ -118,6 +118,11 @@
             <artifactId>opencsv</artifactId>
             <version>5.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht</artifactId>
+            <version>1.5.1</version>
+        </dependency>
 
 
     </dependencies>
