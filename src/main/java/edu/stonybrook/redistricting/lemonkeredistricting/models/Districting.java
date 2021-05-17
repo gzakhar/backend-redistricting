@@ -105,10 +105,10 @@ public class Districting {
                 .collect(Collectors.toList());
     }
 
-
     @Transient
     @JsonIgnore
     public List<District> getDistrictOrderPopulation() {
+
         return districts.stream()
                 .sorted(Comparator.comparingInt(o -> o.getTotalPopulation(PopulationType.TOTAL_POPULATION)))
                 .collect(Collectors.toList());
@@ -116,31 +116,10 @@ public class Districting {
 
     @Transient
     @JsonIgnore
-    public List<District> getDistrictsOrderByEnacted() {
+    public List<District> orderDistrictsByReference(Districting reference) {
 
-        return GillConstruct.reorderDistrictsByEnacted(this);
+        return GillConstruct.reorderDistrictsByReference(this, reference);
     }
-
-    @Transient
-    @JsonIgnore
-    public Double getPopulationDeviationFromDistricting() {
-
-        return GillConstruct.populationDifferenceFromDistricting(this);
-    }
-
-    @Transient
-    @JsonIgnore
-    public Double getAreaDeviationFromDistricting(Districting refrenceDistricting) {
-
-        return GillConstruct.areaDifferenceFromDistricting(this, refrenceDistricting);
-    }
-
-//    @Transient
-//    @JsonIgnore
-//    public List<District> getDistrictOrderGillConstruct(Districting comparatorDistricting){
-//
-//
-//    }
 
     @Transient
     @JsonIgnore
@@ -151,6 +130,29 @@ public class Districting {
 
         return orderedDistricts;
     }
+
+    @Transient
+    @JsonIgnore
+    public Double getPopulationDeviationFromReference(Districting reference) {
+
+        return GillConstruct.populationDeviationFromReference(this, reference);
+    }
+
+
+    @Transient
+    @JsonIgnore
+    public Double getAreaDeviationFromReference(Districting reference) {
+
+        return GillConstruct.areaDeviationFromReference(this, reference);
+    }
+
+
+//    @Transient
+//    @JsonIgnore
+//    public List<District> getDistrictOrderGillConstruct(Districting comparatorDistricting){
+//
+//
+//    }
 
     @Transient
     @JsonIgnore

@@ -19,7 +19,7 @@
     <batch:job id="districtingSummaryGenerationJob">
         <batch:step id="districtingSummaryGenerationJob_generate">
             <batch:tasklet>
-                <batch:chunk reader="reader" processor="processor" writer="writer" commit-interval="1000"/>
+                <batch:chunk reader="reader" processor="processor" writer="writer" commit-interval="10"/>
             </batch:tasklet>
         </batch:step>
     </batch:job>

@@ -79,7 +79,7 @@ public class DistrictingController {
     }
 
     @GetMapping("/districtings/{districtingId}/geometry")
-    public JSONObject getDistrictingGeometry(@PathVariable Long districtingId) throws IOException, ParseException {
+    public JSONObject getDistrictingGeometry(@PathVariable Long districtingId) {
 
         Districting districting = districtingRepository.findById(districtingId).orElse(null);
 
@@ -92,13 +92,22 @@ public class DistrictingController {
 //        return geometryCalculation.calculateDistrictingGeometry(districtingId);
 //    }
 
+    @GetMapping("/districtings/{districtingId}/enacted-district-correlation")
+    public Map<Long, Long> getDistrictingReordering(@PathVariable Long districtingId) {
+
+        Districting enacted = districtingRepository.findEnactedByDistrictingId(districtingId).orElseThrow();
+        Districting working = districtingRepository.findById(districtingId).orElseThrow();
+
+        return GillConstruct.reorderDistrictsByReferenceMap(working, enacted);
+    }
+
     @GetMapping("/districtings/{districtingId}/district-order-population")
-    public List<Integer> getDistrictOrderByPopulation(@PathVariable Long districtingId) {
+    public List<Long> getDistrictOrderByPopulation(@PathVariable Long districtingId) {
 
         return Objects.requireNonNull(districtingRepository.findById(districtingId).orElse(null))
                 .getDistrictOrderPopulation()
                 .stream()
-                .map(d -> d.getTotalPopulation(PopulationType.TOTAL_POPULATION))
+                .map(d -> d.getDistrictingId())
                 .collect(Collectors.toList());
     }
 
@@ -110,10 +119,15 @@ public class DistrictingController {
                         .findById(districtingId)
                         .orElse(null));
 
+        Districting enacted = Objects.requireNonNull(
+                districtingRepository
+                        .findEnactedByDistrictingId(districtingId)
+                        .orElse(null));
+
         System.out.println("previous order");
         System.out.println(Arrays.toString(current.getDistricts().stream().map(District::getDistrictId).toArray(Long[]::new)));
         System.out.println("new order");
-        List<Long> res = current.getDistrictsOrderByEnacted().stream().map(District::getDistrictId).collect(Collectors.toList());
+        List<Long> res = current.orderDistrictsByReference(enacted).stream().map(District::getDistrictId).collect(Collectors.toList());
         System.out.println(res.toString());
         return res;
     }
@@ -130,7 +144,7 @@ public class DistrictingController {
                 districtingRepository
                         .findById(districtingId)
                         .orElse(null))
-                .getPopulationDeviationFromDistricting(enacted);
+                .getPopulationDeviationFromReference(enacted);
     }
 
     @GetMapping("/districtings/{districtingId}/area-deviation-enacted")
@@ -146,7 +160,7 @@ public class DistrictingController {
                 districtingRepository
                         .findById(districtingId)
                         .orElse(null))
-                .getAreaDeviationFromDistricting(enacted);
+                .getAreaDeviationFromReference(enacted);
     }
 
     @GetMapping("/districtings/{districtingId}/enacted")
@@ -160,13 +174,13 @@ public class DistrictingController {
     }
 
     @GetMapping("/districtings/{districtingId}/geometric-compactness")
-    public Double getGeometricCompactness(@PathVariable Long districtingId){
+    public Double getGeometricCompactness(@PathVariable Long districtingId) {
 
         return Objects.requireNonNull(districtingRepository.findById(districtingId).orElse(null)).getGeometricCompactness();
     }
 
     @GetMapping("/districtings/{districtingId}/summary")
-    public DistrictingSummary getDistrictingSummary(@PathVariable Long districtingId){
+    public DistrictingSummary getDistrictingSummary(@PathVariable Long districtingId) {
 
         return districtingSummaryRepository.findById(districtingId).orElse(null);
     }

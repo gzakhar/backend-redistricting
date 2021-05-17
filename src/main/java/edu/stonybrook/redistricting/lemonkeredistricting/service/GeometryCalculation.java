@@ -215,7 +215,6 @@ public class GeometryCalculation {
         return null;
     }
 
-
     public static JSONObject calculateDistrictingGeometry(List<List<Long>> planIds) {
 
         List<JSONObject> districtGeometries = planIds

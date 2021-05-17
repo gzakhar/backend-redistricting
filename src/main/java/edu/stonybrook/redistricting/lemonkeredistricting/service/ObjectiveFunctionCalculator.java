@@ -49,13 +49,13 @@ public class ObjectiveFunctionCalculator {
                     PopulationEqualityWeight,
                     districtingSummary.getPopulationEqualityByPopulationType(populationType),
                     DeviationFromAveragePopulationWeight,
-                    average.getPopulationDeviationFromDistricting(current),
+                    average.getPopulationDeviationFromReference(current),
                     DeviationFromAverageAreaWeight,
-                    average.getAreaDeviationFromDistricting(current),
+                    average.getAreaDeviationFromReference(current),
                     DeviationFromEnactedPopulationWeight,
-                    enaceted.getPopulationDeviationFromDistricting(current),
+                    enaceted.getPopulationDeviationFromReference(current),
                     DeviationFromEnactedAreaWeight,
-                    enaceted.getAreaDeviationFromDistricting(current),
+                    enaceted.getAreaDeviationFromReference(current),
                     CompactnessWight,
                     districtingSummary.getCompactnessByCompactnessType(compactnessType));
 

@@ -89,7 +89,6 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
                 double sum = 0.0;
                 for (District district : districtsOrderedList) {
                     double pop = district.getTotalPopulation(populationType);
-                    System.out.println(pop);
                     sum += Math.pow((double)(pop / idealPopulation) - 1, 2);
                 }
                 Double populationEqualityScore = Math.sqrt(sum);
