@@ -116,9 +116,9 @@ public class Districting {
 
     @Transient
     @JsonIgnore
-    public List<District> getDistrictsOrder(Districting referenceDistricting) {
+    public List<District> getDistrictsOrderByEnacted() {
 
-        return GillConstruct.reorderDistricts(this, referenceDistricting);
+        return GillConstruct.reorderDistrictsByEnacted(this);
     }
 
     @Transient

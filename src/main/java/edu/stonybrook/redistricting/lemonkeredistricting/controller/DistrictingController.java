@@ -105,10 +105,6 @@ public class DistrictingController {
     @GetMapping("/districtings/{districtingId}/recombine-enacted")
     public List<Long> getReorderedDistrictsIds(@PathVariable Long districtingId) {
 
-        Districting enacted = Objects.requireNonNull(
-                districtingRepository
-                        .findEnactedByDistrictingId(districtingId)
-                        .orElse(null));
         Districting current = Objects.requireNonNull(
                 districtingRepository
                         .findById(districtingId)
@@ -117,7 +113,7 @@ public class DistrictingController {
         System.out.println("previous order");
         System.out.println(Arrays.toString(current.getDistricts().stream().map(District::getDistrictId).toArray(Long[]::new)));
         System.out.println("new order");
-        List<Long> res = current.getDistrictsOrder(enacted).stream().map(District::getDistrictId).collect(Collectors.toList());
+        List<Long> res = current.getDistrictsOrderByEnacted().stream().map(District::getDistrictId).collect(Collectors.toList());
         System.out.println(res.toString());
         return res;
     }

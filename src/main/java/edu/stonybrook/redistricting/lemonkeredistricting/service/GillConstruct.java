@@ -14,32 +14,29 @@ import org.jgrapht.graph.DefaultUndirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import org.jgrapht.*;
 
 public class GillConstruct {
 
     @Autowired
     static DistrictingRepository districtingRepository;
 
-    public static List<District> reorderDistricts(Districting reorderDistricting, Districting reference) {
 
-        double denominator = reorderDistricting.getNumberPrecincts().doubleValue();
-        List<District> refrenceRecombination = reference.getDistrictOrderPopulation();
+    public static List<District> reorderDistricts(Districting workingDistricting, Districting reference) {
 
-        List<List<District>> reordering = districtRecombinations(reorderDistricting)
-                .stream()
-                .sorted(Comparator.comparingInt(r -> ((int) gillObjectiveFunction(denominator, r, refrenceRecombination))))
-                .collect(Collectors.toList());
 
-        System.out.println(reordering);
+        return null;
+    }
 
-        return reordering.get(reordering.size() - 1);
+    public static List<District> reorderDistrictsByEnacted(Districting workingDistricting) {
+
+        Districting enacted = Objects.requireNonNull(districtingRepository
+                .findEnactedByDistrictingId(workingDistricting.getDistrictingId())
+                .orElse(null));
+
+        return null;
     }
 
     public static double populationDifferenceFromDistricting(Districting districting, Districting reference) {
@@ -50,7 +47,7 @@ public class GillConstruct {
                 districting.getDistrictsOrder(reference));
     }
 
-    public static double areaDifferenceFromDistricting(Districting districting, Districting reference){
+    public static double areaDifferenceFromDistricting(Districting districting, Districting reference) {
 
         return areaDifference(
                 districting.getNumberPrecincts(),
@@ -79,7 +76,7 @@ public class GillConstruct {
         //        //each edge is connecting enacted district to corresponding current district
         //        //number accordingly via population order from enacted
         List<District> enactedPopulationOrdering = enacted.getDistrictOrderPopulation();
-        for (DefaultWeightedEdge edge : matchingEdges){
+        for (DefaultWeightedEdge edge : matchingEdges) {
             District enactedDistrict = (District) edge.getSource()
         }
 
@@ -89,16 +86,9 @@ public class GillConstruct {
         return recombination;
     }
 
-    private static double gillObjectiveFunction(Double denominator, List<District> d1, List<District> d2) {
 
-        double intersection = 0;
-        for (int i = 0; i < d1.size(); i++) {
-            intersection += numberCommonPrecincts(d1.get(i), d2.get(i));
-        }
-        return intersection / denominator;
-    }
 
-    private static long numberCommonPrecincts(District d1, District d2) {
+    private static long numberOfCommonPrecincts(District d1, District d2) {
 
         return d1.getPrecincts()
                 .stream()
@@ -117,7 +107,7 @@ public class GillConstruct {
         }
         return numorator / denominator;
     }
-    
+
     private static double areaDifference(double denominator, List<District> d1, List<District> d2) {
 
         int numorator = 0;
