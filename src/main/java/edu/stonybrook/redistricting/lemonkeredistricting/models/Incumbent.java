@@ -6,14 +6,18 @@ import javax.persistence.*;
 @Table(name = "incumbent")
 public class Incumbent {
 
+    @Id
+    @Column(name = "incumbent_id")
     private Long incumbentId;
+    @Column(name = "state_id")
     private Long stateId;
+    @Column(name = "precinct_id")
+    private Long precinctId;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "incumbent_id")
     public Long getIncumbentId() {
         return incumbentId;
     }
@@ -22,13 +26,20 @@ public class Incumbent {
         this.incumbentId = incumbentId;
     }
 
-    @Column(name = "state_id")
     public Long getStateId() {
         return stateId;
     }
 
     public void setStateId(Long stateId) {
         this.stateId = stateId;
+    }
+
+    public Long getPrecinctId() {
+        return precinctId;
+    }
+
+    public void setPrecinctId(Long precinctId) {
+        this.precinctId = precinctId;
     }
 
     public String getFirstName() {
@@ -45,15 +56,5 @@ public class Incumbent {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    @Override
-    public String toString() {
-        return "Incumbent{" +
-                "incumbentId=" + incumbentId +
-                ", stateId=" + stateId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
     }
 }

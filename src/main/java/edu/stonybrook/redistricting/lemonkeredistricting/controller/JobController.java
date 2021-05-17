@@ -111,11 +111,6 @@ public class JobController {
     }
 
 
-    @GetMapping("/jobs/{jobId}/district-stats")
-    public Map<Long, List<DistrictStat>> getDistrictStat(@PathVariable Long jobId) {
-
-        return boxWhiskerService.calculateBoxWhisker(jobId);
-    }
 
 //    @GetMapping("")
 //    public List<DistrictingScore> getObjScores(){

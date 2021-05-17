@@ -1,18 +1,19 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.ArrayList;
+import javax.persistence.Transient;
 
 @Entity
 public class DistrictStat {
 
 
     @Id
+    @Column(name = "district_id")
     private Long district_id;
-    @Column(name = "enacted_district_id")
-    private Long enacted_district_id;
     @Column(name = "districting_id")
     private Long districting_id;
     @Column(name = "tot_white")
@@ -27,6 +28,8 @@ public class DistrictStat {
     private Integer totAIndian;
     @Column(name = "tot_other")
     private Integer totOther;
+    @Column(name = "total_pop")
+    private Integer totPop;
 
 
     public Long getDistrict_id() {
@@ -35,14 +38,6 @@ public class DistrictStat {
 
     public void setDistrict_id(Long district_id) {
         this.district_id = district_id;
-    }
-
-    public Long getEnacted_district_id() {
-        return enacted_district_id;
-    }
-
-    public void setEnacted_district_id(Long enacted_district_id) {
-        this.enacted_district_id = enacted_district_id;
     }
 
     public Long getDistricting_id() {
@@ -100,4 +95,41 @@ public class DistrictStat {
     public void setTotOther(Integer totOther) {
         this.totOther = totOther;
     }
+
+    public Integer getTotPop() {
+        return totPop;
+    }
+
+    public void setTotPop(Integer totPop) {
+        this.totPop = totPop;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Integer getTotalPopulationByEthnicity(Ethnicity ethnicity) {
+        switch (ethnicity) {
+            case WHITE:
+                return getTotWhite();
+            case BLACK:
+                return getTotBlack();
+            case HISPANIC:
+                return getTotHisp();
+            case ASIAN:
+                return getTotAsian();
+            case AMERICAN_INDIAN:
+                return getTotAIndian();
+            case OTHER:
+                return getTotOther();
+            default:
+                return null;
+        }
+    }
+
+    @Transient
+    @JsonIgnore
+    public Double getPopulationPercentage(Ethnicity ethnicity) {
+
+        return (double) getTotalPopulationByEthnicity(ethnicity) / totPop;
+    }
+
 }

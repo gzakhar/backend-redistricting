@@ -1,5 +1,6 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.repo;
 
+import edu.stonybrook.redistricting.lemonkeredistricting.models.DistrictStat;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,5 @@ public interface DistrictingRepository extends JpaRepository<Districting, Long> 
             "inner join districting d2 on s.enacted_districting_id = d2.districting_id\n" +
             "where d.districting_id = (:id)")
     Optional<Districting> findEnactedByDistrictingId(@Param("id") long id);
+
 }
