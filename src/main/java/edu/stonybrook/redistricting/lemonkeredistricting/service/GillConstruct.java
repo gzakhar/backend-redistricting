@@ -12,35 +12,32 @@ import org.jgrapht.generate.CompleteBipartiteGraphGenerator;
 import org.jgrapht.graph.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
-import org.jgrapht.*;
 
 public class GillConstruct {
 
     @Autowired
     static DistrictingRepository districtingRepository;
 
-    public static List<District> reorderDistricts(Districting reorderDistricting, Districting reference) {
+    public static List<District> reorderDistricts(Districting workingDistricting, Districting reference) {
 
-        double denominator = reorderDistricting.getNumberPrecincts().doubleValue();
-        List<District> refrenceRecombination = reference.getDistrictOrderPopulation();
-
-        List<List<District>> reordering = districtRecombinations(reorderDistricting)
-                .stream()
-                .sorted(Comparator.comparingInt(r -> ((int) gillObjectiveFunction(denominator, r, refrenceRecombination))))
-                .collect(Collectors.toList());
-
-        System.out.println(reordering);
-
-        return reordering.get(reordering.size() - 1);
+        return null;
     }
 
-    public static double populationDifferenceFromDistricting(Districting districting, Districting reference) {
+    public static List<District> reorderDistrictsByEnacted(Districting workingDistricting) {
+
+        Districting enacted = Objects.requireNonNull(districtingRepository
+                .findEnactedByDistrictingId(workingDistricting.getDistrictingId())
+                .orElse(null));
+
+        return null;
+    }
+
+    public static double populationDifferenceFromEnacted(Districting districting){
+        Districting enacted = Objects.requireNonNull(districtingRepository
+                .findEnactedByDistrictingId(workingDistricting.getDistrictingId())
+                .orElse(null));
 
         return populationDifference(
                 districting.getTotalPopulation(PopulationType.TOTAL_POPULATION),
@@ -48,7 +45,17 @@ public class GillConstruct {
                 districting.getDistrictsOrder(reference));
     }
 
-    public static double areaDifferenceFromDistricting(Districting districting, Districting reference){
+    public static double populationDifferenceFromDistricting(Districting districting, Districting reference) {
+
+
+
+        return populationDifference(
+                districting.getTotalPopulation(PopulationType.TOTAL_POPULATION),
+                reference.getDistrictOrderPopulation(),
+                districting.getDistrictsOrder(reference));
+    }
+
+    public static double areaDifferenceFromDistricting(Districting districting, Districting reference) {
 
         return areaDifference(
                 districting.getNumberPrecincts(),
@@ -63,17 +70,17 @@ public class GillConstruct {
 
         WeightedMultigraph<District, DefaultWeightedEdge> graph = new WeightedMultigraph<>(DefaultWeightedEdge.class);
 
-        for (District enactedDistrict : enactedDistricts){
+        for (District enactedDistrict : enactedDistricts) {
             // add to the graph
             graph.addVertex(enactedDistrict);
         }
-        for (District currentDistrict : current){
+        for (District currentDistrict : current) {
             // add to the graph
             graph.addVertex(currentDistrict);
         }
-        for (District enactedDistrict : enactedDistricts){
+        for (District enactedDistrict : enactedDistricts) {
             // add to the graph
-            for (District currentDistrict : current){
+            for (District currentDistrict : current) {
                 //populate the graph with the edges and the corresponding weight
                 DefaultWeightedEdge edge = graph.addEdge(enactedDistrict, currentDistrict);
                 graph.setEdgeWeight(edge, gillObjectiveFunction(enactedDistrict, currentDistrict));
@@ -90,7 +97,7 @@ public class GillConstruct {
         //        //number accordingly via population order from enacted
         List<District> enactedPopulationOrdering = enacted.getDistrictOrderPopulation();
 
-        for (DefaultWeightedEdge matchingEdge: matchingEdges){
+        for (DefaultWeightedEdge matchingEdge : matchingEdges) {
             District enactedDistrict = graph.getEdgeSource(matchingEdge);
             District currentDistrict = graph.getEdgeTarget(matchingEdge);
         }
@@ -112,7 +119,7 @@ public class GillConstruct {
 
     private static double gillObjectiveFunction(District d1, District d2) {
 
-        return (double) numberCommonPrecincts(d1, d2) /Integer.max(d1.getNumberPrecincts(), d2.getNumberPrecincts());
+        return (double) numberCommonPrecincts(d1, d2) / Integer.max(d1.getNumberPrecincts(), d2.getNumberPrecincts());
     }
 
     private static long numberCommonPrecincts(District d1, District d2) {
@@ -134,7 +141,7 @@ public class GillConstruct {
         }
         return numorator / denominator;
     }
-    
+
     private static double areaDifference(double denominator, List<District> d1, List<District> d2) {
 
         int numorator = 0;

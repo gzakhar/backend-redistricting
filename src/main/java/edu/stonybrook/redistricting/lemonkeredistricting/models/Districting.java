@@ -123,9 +123,9 @@ public class Districting {
 
     @Transient
     @JsonIgnore
-    public Double getPopulationDeviationFromDistricting(Districting referenceDistricting) {
+    public Double getPopulationDeviationFromDistricting() {
 
-        return GillConstruct.populationDifferenceFromDistricting(this, referenceDistricting);
+        return GillConstruct.populationDifferenceFromDistricting(this);
     }
 
     @Transient
