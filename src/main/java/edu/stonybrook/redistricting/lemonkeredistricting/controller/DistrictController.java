@@ -1,9 +1,6 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.models.District;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.DistrictingSummary;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Ethnicity;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
@@ -57,20 +54,29 @@ public class DistrictController {
     }
 
     @GetMapping("/districts/{districtId}/geometry")
-    public JSONObject getGeometry(@PathVariable Long districtId ){
+    public JSONObject getGeometry(@PathVariable Long districtId) {
 
         Geometry geometry = Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).getGeometry();
         return GeometryCalculation.geometry2Json(geometry);
     }
 
     @GetMapping("/districts/{districtId}/perimeter")
-    public Double getPerimeter(@PathVariable Long districtId){
+    public Double getPerimeter(@PathVariable Long districtId) {
         return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).getPerimeter();
     }
 
     @GetMapping("/districts/{districtId}/area")
-    public Double getArea(@PathVariable Long districtId){
+    public Double getArea(@PathVariable Long districtId) {
         return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null)).getArea();
+    }
+
+    @GetMapping("/districts/{districtId}/population/{populationType}")
+    public Integer getPopulationByPopulationType(@PathVariable Long districtId, @PathVariable PopulationType populationType) {
+
+
+
+        return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null))
+                .getTotalPopulation(populationType);
     }
 
 }

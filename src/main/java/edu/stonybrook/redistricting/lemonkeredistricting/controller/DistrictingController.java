@@ -86,11 +86,11 @@ public class DistrictingController {
         return Objects.requireNonNull(districting).getGeometry();
     }
 
-    @GetMapping("/districtings/{districtingId}/geometry-test")
-    public JSONObject getDistrictingGeometryTest(@PathVariable Long districtingId) throws IOException, ParseException {
-
-        return geometryCalculation.calculateDistrictingGeometry(districtingId);
-    }
+//    @GetMapping("/districtings/{districtingId}/geometry-test")
+//    public JSONObject getDistrictingGeometryTest(@PathVariable Long districtingId) throws IOException, ParseException {
+//
+//        return geometryCalculation.calculateDistrictingGeometry(districtingId);
+//    }
 
     @GetMapping("/districtings/{districtingId}/district-order-population")
     public List<Integer> getDistrictOrderByPopulation(@PathVariable Long districtingId) {

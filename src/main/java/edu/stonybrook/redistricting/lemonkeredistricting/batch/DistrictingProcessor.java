@@ -79,19 +79,20 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
 //        Population Equality Map. (____________)
         Map<PopulationType, Double> populationEquality = new HashMap<>();
 
-        for (PopulationType populationType : PopulationType.values()) {
 
-            List<District> districtsOrderedList = districting.orderDistrictsByPopulationType(populationType);
+        List<District> districtsOrderedList = (List<District>) districting.getDistricts();
+        for (PopulationType populationType : PopulationType.values()) {
 
             if (districting.getPopulationTypeAvailablability().get(populationType)) {
 
                 Integer idealPopulation = districting.getTotalPopulation(populationType) / districtsOrderedList.size();
-                Double sum = 0.0;
-                for (District district : districtsOrderedList){
-                    sum += Math.pow((district.getTotalPopulation(populationType)/idealPopulation) - 1, 2);
+                double sum = 0.0;
+                for (District district : districtsOrderedList) {
+                    double pop = district.getTotalPopulation(populationType);
+                    System.out.println(pop);
+                    sum += Math.pow((double)(pop / idealPopulation) - 1, 2);
                 }
                 Double populationEqualityScore = Math.sqrt(sum);
-                System.out.println(populationEqualityScore);
                 populationEquality.put(populationType, populationEqualityScore);
             } else {
                 populationEquality.put(populationType, null);

@@ -105,6 +105,7 @@ public class Districting {
                 .collect(Collectors.toList());
     }
 
+
     @Transient
     @JsonIgnore
     public List<District> getDistrictOrderPopulation() {
@@ -166,18 +167,19 @@ public class Districting {
     @JsonIgnore
     public JSONObject getGeometry() {
 
-        List<JSONObject> districtingArrayList = districts.stream()
-                .map(district -> GeometryCalculation.geometry2Json(district.getGeometry()))
-                .collect(Collectors.toList());
+//        List<JSONObject> districtingArrayList = districts.stream()
+//                .map(district -> GeometryCalculation.geometry2Json(district.getGeometry()))
+//                .collect(Collectors.toList());
+//
+//        JSONArray features = new JSONArray();
+//        features.addAll(districtingArrayList);
+//
+//        JSONObject output = new JSONObject();
+//        output.put("features", features);
+//        output.put("type", "FeatureCollection");
+//        return output;
 
-        JSONArray features = new JSONArray();
-        features.addAll(districtingArrayList);
-
-        JSONObject output = new JSONObject();
-        output.put("features", features);
-        output.put("type", "FeatureCollection");
-
-        return output;
+        return GeometryCalculation.calculateDistrictingGeometry(this.getPrecinctIds());
     }
 
     @Transient
@@ -185,6 +187,13 @@ public class Districting {
     public Integer getNumberPrecincts() {
 
         return districts.stream().map(District::getNumberPrecincts).reduce(0, Integer::sum);
+    }
+
+    @Transient
+    @JsonIgnore
+    public List<List<Long>> getPrecinctIds(){
+
+        return districts.stream().map(District::getPrecinctIds).collect(Collectors.toList());
     }
 
     @Override

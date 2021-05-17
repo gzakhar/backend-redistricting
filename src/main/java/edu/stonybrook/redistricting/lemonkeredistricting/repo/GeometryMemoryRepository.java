@@ -40,6 +40,7 @@ public class GeometryMemoryRepository {
         }
 
     }
+
     public static Geometry getPrecinctGeometry(long precinctId) {
 
         return precinctGeometryMap.get(precinctId);

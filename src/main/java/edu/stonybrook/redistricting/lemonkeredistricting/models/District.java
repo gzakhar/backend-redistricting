@@ -31,6 +31,10 @@ public class District {
     )
     private Collection<Precinct> precincts;
 
+    @Transient
+    @JsonIgnore
+    private Geometry geometry = null;
+
     /**
      * Getters Setters
      */
@@ -98,10 +102,14 @@ public class District {
     @JsonIgnore
     public Integer getTotalPopulation(PopulationType populationType) {
 
-        return this.precincts.stream()
+//        long start = System.currentTimeMillis();
+        Integer ret = this.precincts.stream()
                 .map(p -> p.getTotalPopulationType(populationType))
                 .filter(Objects::nonNull)
                 .reduce(0, Integer::sum);
+
+//        System.out.println("time: " + (System.currentTimeMillis() - start));
+        return ret;
     }
 
     @Transient
@@ -122,17 +130,10 @@ public class District {
     @JsonIgnore
     public Geometry getGeometry() {
 
-        List<Geometry> geometryList = getPrecinctList()
-                .parallelStream()
-                .map(Precinct::getGeometry)
-                .collect(Collectors.toList());
-
-        GeometryCollection geometryCollection = new GeometryCollection(
-                geometryList
-                        .toArray(new Geometry[precincts.size()]),
-                new GeometryFactory());
-
-        return geometryCollection.union();
+        if (geometry == null) {
+            this.geometry = GeometryCalculation.calculateDistrictGeometry(this.getPrecinctIds());
+        }
+        return geometry;
     }
 
     @Transient

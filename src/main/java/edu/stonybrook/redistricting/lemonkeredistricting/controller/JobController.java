@@ -1,9 +1,11 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictStatRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.WulfJobRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.BoxWhiskerService;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.ConstraintsBuilder;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.ObjectiveFunctionCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class JobController {
 
     @Autowired
     private ObjectiveFunctionCalculator objectiveFunctionCalculator;
+
+    @Autowired
+    private BoxWhiskerService boxWhiskerService;
 
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
@@ -106,11 +111,16 @@ public class JobController {
     }
 
 
+    @GetMapping("/jobs/{jobId}/district-stats")
+    public Map<Long, List<DistrictStat>> getDistrictStat(@PathVariable Long jobId) {
 
-    @GetMapping("")
-    public List<DistrictingScore> getObjScores(){
-
-//        return objectiveFunctionCalculator.calculateObjectiveFunction();
-        return null;
+        return boxWhiskerService.calculateBoxWhisker(jobId);
     }
+
+//    @GetMapping("")
+//    public List<DistrictingScore> getObjScores(){
+//
+////        return objectiveFunctionCalculator.calculateObjectiveFunction();
+//        return null;
+//    }
 }

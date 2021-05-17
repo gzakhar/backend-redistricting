@@ -178,6 +178,10 @@ public class GeometryCalculation {
     public static JSONObject geometry2Json(Geometry geometry) {
 
 //        TODO: Im assuming that here @Harlam is attempting to get rid of the geometry that isnt needed. this should be looked at again.
+
+        JSONParser parser = new JSONParser();
+        GeoJsonWriter writer = new GeoJsonWriter();
+
         try {
             JSONObject json = (JSONObject) parser.parse(writer.write(geometry));
             JSONArray coordinates = (JSONArray) json.get("coordinates");
@@ -196,6 +200,7 @@ public class GeometryCalculation {
             return feature;
 
         } catch (ParseException e) {
+
             e.printStackTrace();
         }
 
@@ -209,5 +214,41 @@ public class GeometryCalculation {
 
         return null;
     }
+
+
+    public static JSONObject calculateDistrictingGeometry(List<List<Long>> planIds) {
+
+        List<JSONObject> districtGeometries = planIds
+                .parallelStream()
+                .map(GeometryCalculation::calculateDistrictGeometry)
+                .map(GeometryCalculation::geometry2Json)
+                .collect(Collectors.toList());
+
+        JSONArray features = new JSONArray();
+        features.addAll(districtGeometries);
+
+        JSONObject output = new JSONObject();
+        output.put("features", features);
+        output.put("type", "FeatureCollection");
+
+
+        return output;
+    }
+
+    public static Geometry calculateDistrictGeometry(List<Long> precinctIds) {
+        List<Geometry> precinctGeometries = precinctIds
+                .parallelStream()
+                .map(GeometryMemoryRepository::getPrecinctGeometry)
+                .collect(Collectors.toList());
+
+        GeometryCollection geometryCollection = new GeometryCollection(
+                precinctGeometries
+                        .toArray(new Geometry[precinctIds.size()]),
+                new GeometryFactory());
+
+        return geometryCollection.union();
+    }
+
+
 
 }

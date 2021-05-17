@@ -1,10 +1,12 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.service;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -12,6 +14,9 @@ public class ObjectiveFunctionCalculator {
 
     @Autowired
     DistrictingSummaryRepository districtingSummaryRepository;
+
+    @Autowired
+    DistrictingRepository districtingRepository;
 
     //    Should calculate the Objectve function score for all districtings id's that are provided.
     public List<DistrictingScore> calculateObjectiveFunction(List<Integer> districtingIds,
@@ -34,14 +39,33 @@ public class ObjectiveFunctionCalculator {
 //        find by seeing to which state the districtings belong to.
         Districting enaceted = new Districting();
 
+        List<DistrictingScore> districtingScores = new ArrayList<>();
 
+        for (DistrictingSummary districtingSummary : filteredDistrictings) {
 
+            Districting current = districtingRepository.findById(districtingSummary.getDistrictingSummaryId()).orElse(null);
 
-        return null;
+            Double ofScore = objectiveFunctionScore(
+                    PopulationEqualityWeight,
+                    districtingSummary.getPopulationEqualityByPopulationType(populationType),
+                    DeviationFromAveragePopulationWeight,
+                    average.getPopulationDeviationFromDistricting(current),
+                    DeviationFromAverageAreaWeight,
+                    average.getAreaDeviationFromDistricting(current),
+                    DeviationFromEnactedPopulationWeight,
+                    enaceted.getPopulationDeviationFromDistricting(current),
+                    DeviationFromEnactedAreaWeight,
+                    enaceted.getAreaDeviationFromDistricting(current),
+                    CompactnessWight,
+                    districtingSummary.getCompactnessByCompactnessType(compactnessType));
+
+            districtingScores.add(new DistrictingScore(districtingSummary.getDistrictingSummaryId(), ofScore));
+        }
+
+        return districtingScores;
     }
 
-    private Double objectiveFunctionScore(Integer districtingId,
-                                          Double PopulationEqualityWeight,
+    private Double objectiveFunctionScore(Double PopulationEqualityWeight,
                                           Double PopulationEqualityValue,
                                           Double DeviationFromAveragePopulationWeight,
                                           Double DeviationFromAveragePopulationValue,
@@ -52,9 +76,7 @@ public class ObjectiveFunctionCalculator {
                                           Double DeviationFromEnactedAreaWeight,
                                           Double DeviationFromEnactedAreaValue,
                                           Double CompactnessWight,
-                                          Double CompactnessValue,
-                                          DistrictingSummary enacted,
-                                          DistrictingSummary average
+                                          Double CompactnessValue
     ) {
 
         //get the districting from districtingid
@@ -62,7 +84,20 @@ public class ObjectiveFunctionCalculator {
         //need to know what population type to calculate popequality
         //remove political fairness, we are not implementing that
         //need to access the average districting
-        return null;
+
+        double PopulationEqualityWeightValue = PopulationEqualityWeight * PopulationEqualityValue;
+        double DeviationFromAveragePopulationWeightValue = DeviationFromAveragePopulationWeight * DeviationFromAveragePopulationValue;
+        double DeviationFromAverageAreaWeightValue = DeviationFromAverageAreaWeight * DeviationFromAverageAreaValue;
+        double DeviationFromEnactedPopulationWeightValue = DeviationFromEnactedPopulationWeight * DeviationFromEnactedPopulationValue;
+        double DeviationFromEnactedAreaWeightValue = DeviationFromEnactedAreaWeight * DeviationFromEnactedAreaValue;
+        double CompactnessWightValue = CompactnessWight * CompactnessValue;
+
+        return PopulationEqualityWeightValue +
+                DeviationFromAveragePopulationWeightValue +
+                DeviationFromAverageAreaWeightValue +
+                DeviationFromEnactedPopulationWeightValue +
+                DeviationFromEnactedAreaWeightValue +
+                CompactnessWightValue;
     }
 
 }
