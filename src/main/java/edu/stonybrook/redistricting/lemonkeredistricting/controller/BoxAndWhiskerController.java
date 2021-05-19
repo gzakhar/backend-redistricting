@@ -31,8 +31,8 @@ public class BoxAndWhiskerController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/box-whisker/{districtingIds}/{ethnicity}/background")
-    public List<List<Double>> getBackground(@PathVariable String[] districtingIds, @PathVariable Ethnicity ethnicity){
+    @GetMapping("/box-whisker/{ethnicity}/background")
+    public List<List<Double>> getBackground(@RequestParam String[] districtingIds, @PathVariable Ethnicity ethnicity){
 
 
         List<Long> ids = Arrays.stream(districtingIds).map(Long::valueOf).collect(Collectors.toList());
