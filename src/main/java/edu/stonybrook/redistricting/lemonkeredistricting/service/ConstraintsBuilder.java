@@ -69,7 +69,7 @@ public class ConstraintsBuilder {
         return constraintsMap;
     }
 
-    public List<DistrictingSummary> constrainJob(Long jobId,
+    public List<DistrictingSummary> constrainJob(List<DistrictingSummary> districtingSummaries,
                                                  List<Incumbent> incumbents,
                                                  CompactnessType compactnessType,
                                                  Double compactnessValue,
@@ -79,11 +79,11 @@ public class ConstraintsBuilder {
                                                  PopulationType populationType,
                                                  Double populationValue) {
 
-        return districtingSummaryRepository
-                .findDistrictingSummaryByJobId(jobId)
+
+        return districtingSummaries
                 .stream()
-                .filter(Objects::nonNull)
-                .filter(summary -> summary.getMMDistrictsByEthnicity(ethnicity, mmThreshold) < mmDistricts)
+                .peek(System.out::println)
+                .filter(summary -> summary.getMMDistrictsByEthnicity(ethnicity, mmThreshold) >= mmDistricts)
                 .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) >= compactnessValue)
                 .filter(summary -> summary.getPopulationDifferenceByPopulationType(populationType) <= populationValue)
                 .collect(Collectors.toList());

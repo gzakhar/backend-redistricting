@@ -33,11 +33,6 @@ public class JobController {
     @Autowired
     private ConstraintsBuilder constraintsBuilder;
 
-    @Autowired
-    private ObjectiveFunctionCalculator objectiveFunctionCalculator;
-
-    @Autowired
-    private BoxWhiskerService boxWhiskerService;
 
     @GetMapping("/jobs")
     public List<Job> getAllJobs() {
@@ -57,10 +52,10 @@ public class JobController {
         return districtingRepository.findAllByJobId(jobId);
     }
 
-    @GetMapping("/jobs/{jobId}/set")
+    @GetMapping("/jobs/{jobId}/set-job")
     public void setCurrentJob(HttpSession httpSession, @PathVariable Long jobId) {
 
-        httpSession.setAttribute("currentJob", WulfJobRepository.findById(jobId));
+        httpSession.setAttribute("selected-job", districtingSummaryRepository.findDistrictingSummaryByJobId(jobId));
     }
 
     @PostMapping("/jobs/{jobId}")
@@ -103,7 +98,13 @@ public class JobController {
                                                                        @RequestParam PopulationType populationType,
                                                                        @RequestParam Double populationValue) {
 
-        return constraintsBuilder.constrainJob(jobId,
+//        HttpSession httpSession,
+//        List<DistrictingSummary> summaries = (List<DistrictingSummary>) httpSession.getAttribute("selected-job");
+
+
+//        System.out.println(summaries);
+//        return null;
+        return constraintsBuilder.constrainJob(districtingSummaryRepository.findDistrictingSummaryByJobId(jobId),
                 null,
                 compactnessType,
                 compactnessValue,
@@ -113,8 +114,6 @@ public class JobController {
                 populationType,
                 populationValue);
     }
-
-
 
 
 //    @GetMapping("")
