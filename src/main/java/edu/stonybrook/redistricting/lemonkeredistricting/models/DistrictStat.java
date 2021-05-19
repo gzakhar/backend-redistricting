@@ -10,7 +10,6 @@ import javax.persistence.Transient;
 @Entity
 public class DistrictStat {
 
-
     @Id
     @Column(name = "district_id")
     private Long district_id;

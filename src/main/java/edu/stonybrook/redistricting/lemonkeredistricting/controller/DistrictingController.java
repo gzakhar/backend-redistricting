@@ -36,6 +36,9 @@ public class DistrictingController {
     @Autowired
     private ObjectiveFunctionCalculator objectiveFunctionCalculator;
 
+    @Autowired
+    private DistrictSummaryRepository districtSummaryRepository;
+
     @GetMapping("/districtings")
     public List<Districting> getDistrictings() {
 

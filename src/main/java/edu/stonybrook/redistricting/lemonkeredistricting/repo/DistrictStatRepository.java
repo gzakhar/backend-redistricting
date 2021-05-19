@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface DistrictStatRepository extends JpaRepository<DistrictStat, Long> {
 
-
     @Query(nativeQuery = true, value="select d.districting_id,\n" +
             "       d.district_id,\n" +
             "       sum(p.tot_white) as tot_white,\n" +
