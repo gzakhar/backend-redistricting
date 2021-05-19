@@ -18,6 +18,7 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
     @Override
     public DistrictingSummary process(final Districting districting) throws Exception {
 
+        long totstart = System.currentTimeMillis();
         DistrictingSummary districtingSummary = new DistrictingSummary();
 
 //        id.
@@ -37,25 +38,25 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
 //        System.out.println("compactness : " + (System.currentTimeMillis() - start));
 
 
-//        start = System.currentTimeMillis();
-//        Map of mm Districts by Ethnicity.
-        for (Ethnicity e : Ethnicity.values()) {
-
-            switch (e) {
-                case WHITE:
-                    districtingSummary.setMmWhite((long) districting.getMMDistrictCount(e));
-                case BLACK:
-                    districtingSummary.setMmBlack((long) districting.getMMDistrictCount(e));
-                case HISPANIC:
-                    districtingSummary.setMmHispanic((long) districting.getMMDistrictCount(e));
-                case ASIAN:
-                    districtingSummary.setMmAsian((long) districting.getMMDistrictCount(e));
-                case AMERICAN_INDIAN:
-                    districtingSummary.setMmAmind((long) districting.getMMDistrictCount(e));
-                case OTHER:
-                    districtingSummary.setMmOther((long) districting.getMMDistrictCount(e));
-            }
-        }
+//        long start = System.currentTimeMillis();
+////        Map of mm Districts by Ethnicity.
+//        for (Ethnicity e : Ethnicity.values()) {
+//
+//            switch (e) {
+//                case WHITE:
+//                    districtingSummary.setMmWhite((long) districting.getMMDistrictCount(e));
+//                case BLACK:
+//                    districtingSummary.setMmBlack((long) districting.getMMDistrictCount(e));
+//                case HISPANIC:
+//                    districtingSummary.setMmHispanic((long) districting.getMMDistrictCount(e));
+//                case ASIAN:
+//                    districtingSummary.setMmAsian((long) districting.getMMDistrictCount(e));
+//                case AMERICAN_INDIAN:
+//                    districtingSummary.setMmAmind((long) districting.getMMDistrictCount(e));
+//                case OTHER:
+//                    districtingSummary.setMmOther((long) districting.getMMDistrictCount(e));
+//            }
+//        }
 //        System.out.println("mm Districts : " + (System.currentTimeMillis() - start));
 
 
@@ -125,6 +126,7 @@ public class DistrictingProcessor implements ItemProcessor<Districting, District
         districtingSummary.setTotalPopulationEquality(res);
 //        System.out.println("equal population : " + (System.currentTimeMillis() - start));
 
+        System.out.println("total: " + (System.currentTimeMillis() - totstart));
         return districtingSummary;
     }
 

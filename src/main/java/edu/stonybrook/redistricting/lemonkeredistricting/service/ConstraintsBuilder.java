@@ -75,15 +75,13 @@ public class ConstraintsBuilder {
                                                  Double compactnessValue,
                                                  Integer mmDistricts,
                                                  Ethnicity ethnicity,
-                                                 Double mmThreshold,
                                                  PopulationType populationType,
                                                  Double populationValue) {
 
 
         return districtingSummaries
                 .stream()
-                .peek(System.out::println)
-                .filter(summary -> summary.getMMDistrictsByEthnicity(ethnicity, mmThreshold) >= mmDistricts)
+                .filter(summary -> summary.getMMDistrictsByEthnicity(ethnicity) >= mmDistricts)
                 .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) >= compactnessValue)
                 .filter(summary -> summary.getPopulationDifferenceByPopulationType(populationType) <= populationValue)
                 .collect(Collectors.toList());

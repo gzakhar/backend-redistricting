@@ -62,8 +62,6 @@ public class DistrictingSummary {
     @Column(name = "cva_population_equality")
     private Double cvaPopulationEquality;
 
-    @OneToMany(mappedBy = "districtingId")
-    private Collection<DistrictSummary> districtSummaryCollection;
 
     public DistrictingSummary() {
     }
@@ -225,13 +223,13 @@ public class DistrictingSummary {
         this.cvaPopulationEquality = cvaPopulationEquality;
     }
 
-    public Collection<DistrictSummary> getDistrictSummaryCollection() {
-        return districtSummaryCollection;
-    }
-
-    public void setDistrictSummaryCollection(Collection<DistrictSummary> districtSummaryCollection) {
-        this.districtSummaryCollection = districtSummaryCollection;
-    }
+//    public Collection<DistrictSummary> getDistrictSummaryCollection() {
+//        return districtSummaryCollection;
+//    }
+//
+//    public void setDistrictSummaryCollection(Collection<DistrictSummary> districtSummaryCollection) {
+//        this.districtSummaryCollection = districtSummaryCollection;
+//    }
 
     @Transient
     @JsonIgnore
@@ -281,12 +279,28 @@ public class DistrictingSummary {
 
     @Transient
     @JsonIgnore
-    public Long getMMDistrictsByEthnicity(Ethnicity ethnicity, Double threshold) {
+    public Long getMMDistrictsByEthnicity(Ethnicity ethnicity) {
 
-        return districtSummaryCollection
-                .stream()
-                .filter(d -> d.isMagorityMinorityByEthnicity(ethnicity, threshold))
-                .count();
+        switch (ethnicity){
+            case WHITE:
+                return this.mmWhite;
+            case BLACK:
+                return this.mmBlack;
+            case HISPANIC:
+                return this.mmHispanic;
+            case ASIAN:
+                return this.mmAsian;
+            case AMERICAN_INDIAN:
+                return this.mmAmind;
+            case OTHER:
+                return this.mmOther;
+            default:
+                return null;
+        }
+//        return districtSummaryCollection
+//                .stream()
+//                .filter(d -> d.isMagorityMinorityByEthnicity(ethnicity, threshold))
+//                .count();
     }
 
     @Override

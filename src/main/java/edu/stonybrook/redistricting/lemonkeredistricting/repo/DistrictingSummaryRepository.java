@@ -27,4 +27,30 @@ public interface DistrictingSummaryRepository extends JpaRepository<DistrictingS
             "WHERE j.job_id = (:id);")
     List<DistrictingSummary> findDistrictingSummaryByJobId(@Param("id") Long id);
 
+    @Query(nativeQuery = true, value = "select ds.districting_summary_id,\n" +
+            "       ds.district_count,\n" +
+            "       ds.geometric_compactness,\n" +
+            "       ds.graph_compactness,\n" +
+            "       ds.population_compactness,\n" +
+            "       sum(case when (d2.tot_white / d2.tot_pop) > (:threshold) then 1 else 0 end)    as mm_white,\n" +
+            "       sum(case when (d2.tot_black / d2.tot_pop) > (:threshold) then 1 else 0 end)    as mm_black,\n" +
+            "       sum(case when (d2.tot_hisp / d2.tot_pop) > (:threshold) then 1 else 0 end)     as mm_hispanic,\n" +
+            "       sum(case when (d2.tot_asian / d2.tot_pop) > (:threshold) then 1 else 0 end)    as mm_asian,\n" +
+            "       sum(case when (d2.tot_a_indian / d2.tot_pop) > (:threshold) then 1 else 0 end) as mm_amind,\n" +
+            "       sum(case when (d2.tot_other / d2.tot_pop) > (:threshold) then 1 else 0 end)    as mm_other,\n" +
+            "       ds.total_population,\n" +
+            "       ds.va_population,\n" +
+            "       ds.cva_population,\n" +
+            "       ds.total_population_equality,\n" +
+            "       ds.va_population_equality,\n" +
+            "       ds.cva_population_equality\n" +
+            "from job j\n" +
+            "         inner join job_districting_map jdm on j.job_id = jdm.job_id\n" +
+            "         inner join districting d on jdm.districting_id = d.districting_id\n" +
+            "         inner join districting_summary ds on d.districting_id = ds.districting_summary_id\n" +
+            "         inner join district d2 on d.districting_id = d2.districting_id\n" +
+            "where j.job_id = (:id)\n" +
+            "group by ds.districting_summary_id;")
+    List<DistrictingSummary> findDistrictingSummaryByJobId(@Param("id") Long id, @Param("threshold") Double threshold);
+
 }

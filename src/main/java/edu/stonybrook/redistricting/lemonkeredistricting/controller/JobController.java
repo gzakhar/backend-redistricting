@@ -98,19 +98,12 @@ public class JobController {
                                                                        @RequestParam PopulationType populationType,
                                                                        @RequestParam Double populationValue) {
 
-//        HttpSession httpSession,
-//        List<DistrictingSummary> summaries = (List<DistrictingSummary>) httpSession.getAttribute("selected-job");
-
-
-//        System.out.println(summaries);
-//        return null;
-        return constraintsBuilder.constrainJob(districtingSummaryRepository.findDistrictingSummaryByJobId(jobId),
+        return constraintsBuilder.constrainJob(districtingSummaryRepository.findDistrictingSummaryByJobId(jobId, threshold),
                 null,
                 compactnessType,
                 compactnessValue,
                 mmDistricts,
                 ethnicity,
-                threshold,
                 populationType,
                 populationValue);
     }
