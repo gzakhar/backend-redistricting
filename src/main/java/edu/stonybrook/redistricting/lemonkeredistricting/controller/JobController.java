@@ -98,6 +98,8 @@ public class JobController {
                                                                        @RequestParam CompactnessType compactnessType,
                                                                        @RequestParam Double compactnessValue,
                                                                        @RequestParam Integer mmDistricts,
+                                                                       @RequestParam Ethnicity ethnicity,
+                                                                       @RequestParam Double threshold,
                                                                        @RequestParam PopulationType populationType,
                                                                        @RequestParam Double populationValue) {
 
@@ -106,6 +108,8 @@ public class JobController {
                 compactnessType,
                 compactnessValue,
                 mmDistricts,
+                ethnicity,
+                threshold,
                 populationType,
                 populationValue);
     }

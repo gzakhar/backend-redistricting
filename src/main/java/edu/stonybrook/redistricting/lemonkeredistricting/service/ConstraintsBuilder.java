@@ -74,6 +74,8 @@ public class ConstraintsBuilder {
                                                  CompactnessType compactnessType,
                                                  Double compactnessValue,
                                                  Integer mmDistricts,
+                                                 Ethnicity ethnicity,
+                                                 Double mmThreshold,
                                                  PopulationType populationType,
                                                  Double populationValue) {
 
@@ -81,7 +83,7 @@ public class ConstraintsBuilder {
                 .findDistrictingSummaryByJobId(jobId)
                 .stream()
                 .filter(Objects::nonNull)
-                .filter(summary -> summary.getMMDistrictsByEthnicity(Ethnicity.WHITE, 0.5) < mmDistricts)
+                .filter(summary -> summary.getMMDistrictsByEthnicity(ethnicity, mmThreshold) < mmDistricts)
                 .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) >= compactnessValue)
                 .filter(summary -> summary.getPopulationDifferenceByPopulationType(populationType) <= populationValue)
                 .collect(Collectors.toList());
