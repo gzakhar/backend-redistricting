@@ -27,7 +27,7 @@ public class DistrictStat {
     private Integer totAIndian;
     @Column(name = "tot_other")
     private Integer totOther;
-    @Column(name = "total_pop")
+    @Column(name = "tot_pop")
     private Integer totPop;
 
 

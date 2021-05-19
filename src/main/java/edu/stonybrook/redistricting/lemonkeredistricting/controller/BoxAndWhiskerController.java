@@ -35,9 +35,7 @@ public class BoxAndWhiskerController {
     public List<List<Double>> getBackground(@RequestParam String[] districtingIds, @PathVariable Ethnicity ethnicity){
 
 
-        List<Long> ids = Arrays.stream(districtingIds).map(Long::valueOf).collect(Collectors.toList());
-
-        List<DistrictStat> stats = districtStatRepository.findAllByDistrictingIds(ids);
+        List<DistrictStat> stats = districtStatRepository.findAllByDistrictingIds(Arrays.asList(districtingIds));
         Map<Long, List<DistrictStat>> planStats = boxWhiskerService.getBoxplotData(stats, ethnicity);
         Long key = (Long) planStats.keySet().toArray()[0];
 
