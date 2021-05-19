@@ -83,7 +83,7 @@ public class ConstraintsBuilder {
                 .stream()
                 .filter(summary -> summary.getMMDistrictsByEthnicity(ethnicity) >= mmDistricts)
                 .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) >= compactnessValue)
-                .filter(summary -> summary.getPopulationDifferenceByPopulationType(populationType) <= populationValue)
+                .filter(summary -> summary.getPopulationDifferenceByPopulationType(populationType) >= populationValue)
                 .collect(Collectors.toList());
     }
 
