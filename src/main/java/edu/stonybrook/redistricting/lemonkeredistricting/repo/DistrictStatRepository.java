@@ -9,20 +9,22 @@ import java.util.List;
 
 public interface DistrictStatRepository extends JpaRepository<DistrictStat, Long> {
 
-    @Query(nativeQuery = true, value="select d.districting_id,\n" +
-            "       d.district_id,\n" +
-            "       sum(p.tot_white) as tot_white,\n" +
-            "       sum(p.tot_black) as tot_black,\n" +
-            "       sum(p.tot_hisp)  as tot_hisp,\n" +
-            "       sum(p.tot_asian) as tot_asian,\n" +
-            "       sum(p.tot_a_indian) as tot_a_indian,\n" +
-            "       sum(p.tot_other) as tot_other,\n" +
-            "       sum(p.tot_white + p.tot_black + p.tot_hisp + p.tot_asian + p.tot_a_indian + p.tot_other) as total_pop\n" +
-            "from precinct p\n" +
-            "         join district_precinct_map dpm on p.precinct_id = dpm.precinct_id\n" +
-            "         join district d on dpm.district_id = d.district_id\n" +
-            "where d.districting_id in (:ids)\n" +
-            "group by d.districting_id, d.district_id;")
+//    @Query(nativeQuery = true, value="select d.districting_id,\n" +
+//            "       d.district_id,\n" +
+//            "       sum(p.tot_white) as tot_white,\n" +
+//            "       sum(p.tot_black) as tot_black,\n" +
+//            "       sum(p.tot_hisp)  as tot_hisp,\n" +
+//            "       sum(p.tot_asian) as tot_asian,\n" +
+//            "       sum(p.tot_a_indian) as tot_a_indian,\n" +
+//            "       sum(p.tot_other) as tot_other,\n" +
+//            "       sum(p.tot_white + p.tot_black + p.tot_hisp + p.tot_asian + p.tot_a_indian + p.tot_other) as total_pop\n" +
+//            "from precinct p\n" +
+//            "         join district_precinct_map dpm on p.precinct_id = dpm.precinct_id\n" +
+//            "         join district d on dpm.district_id = d.district_id\n" +
+//            "where d.districting_id in (:ids)\n" +
+//            "group by d.districting_id, d.district_id;")
+//    List<DistrictStat> findAllByDistrictingIds(@Param("ids") List<Long> districtingIds);
+    @Query(nativeQuery = true, value="SELECT * FROM district WHERE districting_id IN (:ids)")
     List<DistrictStat> findAllByDistrictingIds(@Param("ids") List<Long> districtingIds);
 
     @Query(nativeQuery = true, value="select d2.district_id,\n" +

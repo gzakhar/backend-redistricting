@@ -32,12 +32,10 @@ public class BoxAndWhiskerController {
     }
 
     @GetMapping("/box-whisker/{districtingIds}/{ethnicity}/background")
-    public List<List<Double>> getBackground(@PathVariable String[] districtingIds, @PathVariable Ethnicity ethnicity){
+    public List<List<Double>> getBackground(@PathVariable Long[] districtingIds, @PathVariable Ethnicity ethnicity){
 
 
-        List<Long> ids = Arrays.stream(districtingIds).map(Long::valueOf).collect(Collectors.toList());
-
-        List<DistrictStat> stats = districtStatRepository.findAllByDistrictingIds(ids);
+        List<DistrictStat> stats = districtStatRepository.findAllByDistrictingIds(Arrays.asList(districtingIds));
         Map<Long, List<DistrictStat>> planStats = boxWhiskerService.getBoxplotData(stats, ethnicity);
         Long key = (Long) planStats.keySet().toArray()[0];
 
