@@ -1,9 +1,6 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.service;
 
-import edu.stonybrook.redistricting.lemonkeredistricting.models.CompactnessType;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.DistrictingSummary;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.Incumbent;
-import edu.stonybrook.redistricting.lemonkeredistricting.models.PopulationType;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -83,6 +80,8 @@ public class ConstraintsBuilder {
         return districtingSummaryRepository
                 .findDistrictingSummaryByJobId(jobId)
                 .stream()
+                .filter(Objects::nonNull)
+                .filter(summary -> summary.getMMDistrictsByEthnicity(Ethnicity.WHITE, 0.5) < mmDistricts)
                 .filter(summary -> summary.getCompactnessByCompactnessType(compactnessType) >= compactnessValue)
                 .filter(summary -> summary.getPopulationDifferenceByPopulationType(populationType) <= populationValue)
                 .collect(Collectors.toList());

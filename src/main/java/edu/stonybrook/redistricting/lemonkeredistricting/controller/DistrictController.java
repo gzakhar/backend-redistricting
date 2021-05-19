@@ -1,7 +1,9 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictRepository;
+import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictSummaryRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.PrecinctRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
 import org.json.simple.JSONObject;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.Transient;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,6 +29,9 @@ public class DistrictController {
 
     @Autowired
     private PrecinctRepository precinctRepository;
+
+    @Autowired
+    private DistrictSummaryRepository districtSummaryRepository;
 
     @GetMapping("/districts")
     public List<District> getAllDistricts() {
@@ -73,10 +79,15 @@ public class DistrictController {
     @GetMapping("/districts/{districtId}/population/{populationType}")
     public Integer getPopulationByPopulationType(@PathVariable Long districtId, @PathVariable PopulationType populationType) {
 
-
-
         return Objects.requireNonNull(districtRepository.findById(districtId).orElse(null))
                 .getTotalPopulation(populationType);
     }
+
+    @GetMapping("/districts/{districtId}/summary")
+    public DistrictSummary getDistrictSummaryById(Long districtId){
+
+        return districtSummaryRepository.findById(districtId).orElseThrow();
+    }
+
 
 }

@@ -1,13 +1,14 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "districting_summary")
 public class DistrictingSummary {
+
 
     @Id
     @Column(name = "districting_summary_id")
@@ -61,6 +62,8 @@ public class DistrictingSummary {
     @Column(name = "cva_population_equality")
     private Double cvaPopulationEquality;
 
+    @OneToMany(mappedBy = "districtingId")
+    private Collection<DistrictSummary> districtSummaryCollection;
 
     public DistrictingSummary() {
     }
@@ -222,9 +225,17 @@ public class DistrictingSummary {
         this.cvaPopulationEquality = cvaPopulationEquality;
     }
 
+    public Collection<DistrictSummary> getDistrictSummaryCollection() {
+        return districtSummaryCollection;
+    }
+
+    public void setDistrictSummaryCollection(Collection<DistrictSummary> districtSummaryCollection) {
+        this.districtSummaryCollection = districtSummaryCollection;
+    }
+
     @Transient
     @JsonIgnore
-    public Double getCompactnessByCompactnessType(CompactnessType compactnessType){
+    public Double getCompactnessByCompactnessType(CompactnessType compactnessType) {
 
         switch (compactnessType) {
             case GEOMETRIC:
@@ -240,7 +251,7 @@ public class DistrictingSummary {
 
     @Transient
     @JsonIgnore
-    public Double getPopulationDifferenceByPopulationType(PopulationType populationType){
+    public Double getPopulationDifferenceByPopulationType(PopulationType populationType) {
 
         switch (populationType) {
             case TOTAL_POPULATION:
@@ -256,7 +267,7 @@ public class DistrictingSummary {
 
     @Transient
     @JsonIgnore
-    public Double getPopulationEqualityByPopulationType(PopulationType populationType){
+    public Double getPopulationEqualityByPopulationType(PopulationType populationType) {
         switch (populationType){
             case TOTAL_POPULATION:
                 return getTotalPopulationEquality();
@@ -266,6 +277,16 @@ public class DistrictingSummary {
                 return getCvaPopulationEquality();
         }
         return null;
+    }
+
+    @Transient
+    @JsonIgnore
+    public Long getMMDistrictsByEthnicity(Ethnicity ethnicity, Double threshold) {
+
+        return districtSummaryCollection
+                .stream()
+                .filter(d -> d.isMagorityMinorityByEthnicity(ethnicity, threshold))
+                .count();
     }
 
     @Override
@@ -285,6 +306,10 @@ public class DistrictingSummary {
                 ", totalPopulation=" + totalPopulation +
                 ", vaPopulation=" + vaPopulation +
                 ", cvaPopulation=" + cvaPopulation +
+                ", totalPopulationEquality=" + totalPopulationEquality +
+                ", vaPopulationEquality=" + vaPopulationEquality +
+                ", cvaPopulationEquality=" + cvaPopulationEquality +
+//                ", districtSummaries=" + districtSummaries +
                 '}';
     }
 }
