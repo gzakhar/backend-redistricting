@@ -19,7 +19,7 @@ public class ObjectiveFunctionCalculator {
     DistrictingRepository districtingRepository;
 
     //    Should calculate the Objectve function score for all districtings id's that are provided.
-    public List<DistrictingScore> calculateObjectiveFunction(List<Integer> districtingIds,
+    public List<DistrictingScore> calculateObjectiveFunction(List<Long> districtingIds,
                                                              PopulationType populationType,
                                                              Double PopulationEqualityWeight,
                                                              Double DeviationFromAveragePopulationWeight,
@@ -31,13 +31,13 @@ public class ObjectiveFunctionCalculator {
     ) {
 
         List<DistrictingSummary> filteredDistrictings = districtingSummaryRepository
-                .findAllById((Iterable<Long>) districtingIds.iterator());
+                .findAllById(districtingIds);
 
 //        find using list of provided Ids.
-        Districting average = new Districting();
+//        Districting average = new Districting();
 
 //        find by seeing to which state the districtings belong to.
-        Districting enaceted = new Districting();
+        Districting enaceted = districtingRepository.findEnactedByDistrictingId(districtingIds.get(0)).orElseThrow();
 
         List<DistrictingScore> districtingScores = new ArrayList<>();
 
@@ -49,9 +49,9 @@ public class ObjectiveFunctionCalculator {
                     PopulationEqualityWeight,
                     districtingSummary.getPopulationEqualityByPopulationType(populationType),
                     DeviationFromAveragePopulationWeight,
-                    average.getPopulationDeviationFromReference(current),
+                    1.0,
                     DeviationFromAverageAreaWeight,
-                    average.getAreaDeviationFromReference(current),
+                    1.0,
                     DeviationFromEnactedPopulationWeight,
                     enaceted.getPopulationDeviationFromReference(current),
                     DeviationFromEnactedAreaWeight,

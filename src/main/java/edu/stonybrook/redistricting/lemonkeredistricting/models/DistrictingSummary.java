@@ -257,7 +257,14 @@ public class DistrictingSummary {
     @Transient
     @JsonIgnore
     public Double getPopulationEqualityByPopulationType(PopulationType populationType){
-
+        switch (populationType){
+            case TOTAL_POPULATION:
+                return getTotalPopulationEquality();
+            case VOTING_AGE_POPULATION:
+                return getVaPopulationEquality();
+            case CITIZEN_VOTING_AGE_POPULATION:
+                return getCvaPopulationEquality();
+        }
         return null;
     }
 

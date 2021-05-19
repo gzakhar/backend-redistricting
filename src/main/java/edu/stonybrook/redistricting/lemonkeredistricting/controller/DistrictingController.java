@@ -4,6 +4,7 @@ import edu.stonybrook.redistricting.lemonkeredistricting.models.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.*;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.GeometryCalculation;
 import edu.stonybrook.redistricting.lemonkeredistricting.service.GillConstruct;
+import edu.stonybrook.redistricting.lemonkeredistricting.service.ObjectiveFunctionCalculator;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class DistrictingController {
 
     @Autowired
     private DistrictingSummaryRepository districtingSummaryRepository;
+
+    @Autowired
+    private ObjectiveFunctionCalculator objectiveFunctionCalculator;
 
     @GetMapping("/districtings")
     public List<Districting> getDistrictings() {
@@ -195,13 +199,25 @@ public class DistrictingController {
 
     @GetMapping("/districtings/{districtingIds}/objective-function")
     public List<DistrictingScore> getObjectiveFunctionScores(@PathVariable Long[] districtingIds,
-                                                             @RequestParam Double wight,
-                                                             @RequestParam Double compactnessValue,
-                                                             @RequestParam Double mmDistricts,
-                                                             @RequestParam Double populationType,
-                                                             @RequestParam Double populationValue){
+                                                             @RequestParam PopulationType populationType,
+                                                             @RequestParam Double populationEqualityWeight,
+                                                             @RequestParam Double deviationFromAveragePopulationWeight,
+                                                             @RequestParam Double deviationFromAverageAreaWeight,
+                                                             @RequestParam Double deviationFromEnactedPopulationWeight,
+                                                             @RequestParam Double deviationFromEnactedAreaWeight,
+                                                             @RequestParam CompactnessType compactnessType,
+                                                             @RequestParam Double compactnessWeight
+                                                             ){
 
-        return null;
+        return objectiveFunctionCalculator.calculateObjectiveFunction(Arrays.asList(districtingIds),
+                                                                        populationType,
+                                                                        populationEqualityWeight,
+                                                                        deviationFromAveragePopulationWeight,
+                                                                        deviationFromAverageAreaWeight,
+                                                                        deviationFromEnactedPopulationWeight,
+                                                                        deviationFromEnactedAreaWeight,
+                                                                        compactnessType,
+                                                                        compactnessWeight);
     }
 
 //    TODO: session not available.
