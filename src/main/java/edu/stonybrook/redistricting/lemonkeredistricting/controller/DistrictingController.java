@@ -193,6 +193,17 @@ public class DistrictingController {
                 .getTotalPopulation(PopulationType.TOTAL_POPULATION);
     }
 
+    @GetMapping("/districtings/{districtingIds}/objective-function")
+    public List<DistrictingScore> getObjectiveFunctionScores(@PathVariable Long[] districtingIds,
+                                                             @RequestParam Double wight,
+                                                             @RequestParam Double compactnessValue,
+                                                             @RequestParam Double mmDistricts,
+                                                             @RequestParam Double populationType,
+                                                             @RequestParam Double populationValue){
+
+        return null;
+    }
+
 //    TODO: session not available.
 //    @GetMapping("/districtings/{districtingId}")
 //    public Districting getDistrictingById(HttpSession httpSession, @PathVariable Long districtingId) {
