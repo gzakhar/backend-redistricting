@@ -106,6 +106,7 @@ public class DistrictingSummary {
     }
 
     public void setGeometricCompactness(Double geometricCompactness) {
+
         this.geometricCompactness = geometricCompactness;
     }
 

@@ -67,7 +67,7 @@ public class Districting {
 
     @Transient
     @JsonIgnore
-    public Integer getDistrictingCount() {
+    public Integer getNumberDistricts() {
 
         return districts.size();
     }
@@ -79,7 +79,7 @@ public class Districting {
         int ethnicityPopulation = getPopulation(ethnicity, PopulationType.TOTAL_POPULATION);
         int totalPopulation = getTotalPopulation(PopulationType.TOTAL_POPULATION);
 
-        return (int) (((double) ethnicityPopulation / (double) totalPopulation) * (double) getDistrictingCount());
+        return (int) (((double) ethnicityPopulation / (double) totalPopulation) * (double) getNumberDistricts());
     }
 
     @Transient
@@ -138,14 +138,12 @@ public class Districting {
         return GillConstruct.populationDeviationFromReference(this, reference);
     }
 
-
     @Transient
     @JsonIgnore
     public Double getAreaDeviationFromReference(Districting reference) {
 
         return GillConstruct.areaDeviationFromReference(this, reference);
     }
-
 
 //    @Transient
 //    @JsonIgnore
@@ -158,11 +156,7 @@ public class Districting {
     @JsonIgnore
     public Double getGeometricCompactness() {
 
-        double compactness = districts.stream()
-                .map(district ->
-                        ((4 * Math.PI) * (district.getArea() / Math.pow(district.getPerimeter(), 2))))
-                .reduce(0.0, Double::sum);
-        return compactness / districts.size();
+        return GeometryCalculation.getGeometricCompactness(this);
     }
 
     @Transient

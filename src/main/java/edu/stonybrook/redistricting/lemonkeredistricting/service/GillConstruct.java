@@ -16,8 +16,8 @@ import java.util.*;
 public class GillConstruct {
 
     public static List<District> reorderDistrictsByReference(Districting workingDistricting, Districting referenceDistricting) {
-        Set<District> current = (Set<District>) workingDistricting.getDistricts();
-        Set<District> enactedDistricts = (Set<District>) referenceDistricting.getDistricts();
+        Set<District> current = new HashSet<>(workingDistricting.getDistricts());
+        Set<District> enactedDistricts = new HashSet<>(referenceDistricting.getDistricts());
 
         WeightedMultigraph<District, DefaultWeightedEdge> graph = new WeightedMultigraph<>(DefaultWeightedEdge.class);
 
@@ -48,7 +48,7 @@ public class GillConstruct {
         //number accordingly via population order from enacted
         List<District> enactedPopulationOrdering = referenceDistricting.getDistrictOrderPopulation();
 
-        District[] orderedDistricting = new District[workingDistricting.getDistrictingCount()];
+        District[] orderedDistricting = new District[workingDistricting.getNumberDistricts()];
         for (DefaultWeightedEdge matchingEdge : matchingEdges) {
             District enactedDistrict = graph.getEdgeSource(matchingEdge);
             District currentDistrict = graph.getEdgeTarget(matchingEdge);
@@ -75,40 +75,6 @@ public class GillConstruct {
                 workingDistricting.getNumberPrecincts(),
                 workingDistricting.orderDistrictsByReference(referenceDistricting),
                 referenceDistricting.getDistrictOrderPopulation());
-    }
-
-    private static double populationDifference(double denominator, List<District> d1, List<District> d2) {
-
-        int numorator = 0;
-        for (int i = 0; i < Integer.min(d1.size(), d2.size()); i++) {
-            numorator += Math.abs(
-                    d1.get(i).getTotalPopulation(PopulationType.TOTAL_POPULATION)
-                            - d2.get(i).getTotalPopulation(PopulationType.TOTAL_POPULATION));
-        }
-        return numorator / denominator;
-    }
-
-    private static double areaDifference(double denominator, List<District> d1, List<District> d2) {
-
-        int numorator = 0;
-        for (int i = 0; i < Integer.min(d1.size(), d2.size()); i++) {
-            numorator += Math.abs(d1.get(i).getNumberPrecincts() - d2.get(i).getNumberPrecincts());
-        }
-        return numorator / denominator;
-    }
-
-    private static double gillObjectiveFunction(District d1, District d2) {
-
-        return (double) numberCommonPrecincts(d1, d2) / Integer.max(d1.getNumberPrecincts(), d2.getNumberPrecincts());
-    }
-
-    private static long numberCommonPrecincts(District d1, District d2) {
-
-        return d1.getPrecincts()
-                .stream()
-                .map(Precinct::getPrecinctId)
-                .filter(pId -> d2.getPrecinctIds().contains(pId))
-                .count();
     }
 
     public static Map<Long, Long> reorderDistrictsByReferenceMap(Districting workingDistricting, Districting referenceDistricting) {
@@ -150,5 +116,39 @@ public class GillConstruct {
         }
 
         return res;
+    }
+
+    private static double populationDifference(double denominator, List<District> d1, List<District> d2) {
+
+        int numorator = 0;
+        for (int i = 0; i < Integer.min(d1.size(), d2.size()); i++) {
+            numorator += Math.abs(
+                    d1.get(i).getTotalPopulation(PopulationType.TOTAL_POPULATION)
+                            - d2.get(i).getTotalPopulation(PopulationType.TOTAL_POPULATION));
+        }
+        return numorator / denominator;
+    }
+
+    private static double areaDifference(double denominator, List<District> d1, List<District> d2) {
+
+        int numorator = 0;
+        for (int i = 0; i < Integer.min(d1.size(), d2.size()); i++) {
+            numorator += Math.abs(d1.get(i).getNumberPrecincts() - d2.get(i).getNumberPrecincts());
+        }
+        return numorator / denominator;
+    }
+
+    private static double gillObjectiveFunction(District d1, District d2) {
+
+        return (double) numberCommonPrecincts(d1, d2) / Integer.max(d1.getNumberPrecincts(), d2.getNumberPrecincts());
+    }
+
+    private static long numberCommonPrecincts(District d1, District d2) {
+
+        return d1.getPrecincts()
+                .stream()
+                .map(Precinct::getPrecinctId)
+                .filter(pId -> d2.getPrecinctIds().contains(pId))
+                .count();
     }
 }

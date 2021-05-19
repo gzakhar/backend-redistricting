@@ -1,6 +1,7 @@
 package edu.stonybrook.redistricting.lemonkeredistricting.service;
 
 import edu.stonybrook.redistricting.lemonkeredistricting.models.District;
+import edu.stonybrook.redistricting.lemonkeredistricting.models.Districting;
 import edu.stonybrook.redistricting.lemonkeredistricting.models.Precinct;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.DistrictingRepository;
 import edu.stonybrook.redistricting.lemonkeredistricting.repo.GeometryMemoryRepository;
@@ -217,6 +218,8 @@ public class GeometryCalculation {
 
     public static JSONObject calculateDistrictingGeometry(List<List<Long>> planIds) {
 
+        long start = System.currentTimeMillis();
+
         List<JSONObject> districtGeometries = planIds
                 .parallelStream()
                 .map(GeometryCalculation::calculateDistrictGeometry)
@@ -230,11 +233,13 @@ public class GeometryCalculation {
         output.put("features", features);
         output.put("type", "FeatureCollection");
 
+        System.out.println("calculateDistrictingGeometry: time: " + (System.currentTimeMillis() - start));
 
         return output;
     }
 
     public static Geometry calculateDistrictGeometry(List<Long> precinctIds) {
+
         List<Geometry> precinctGeometries = precinctIds
                 .parallelStream()
                 .map(GeometryMemoryRepository::getPrecinctGeometry)
@@ -248,6 +253,12 @@ public class GeometryCalculation {
         return geometryCollection.union();
     }
 
+    public static Double getGeometricCompactness(Districting districting){
 
+        return districting.getPrecinctIds().parallelStream()
+                .map(GeometryCalculation::calculateDistrictGeometry)
+                .map(geometry -> ((4 * Math.PI) * (geometry.getArea() / Math.pow(geometry.getLength(), 2))))
+                .reduce(0.0, Double::sum) / districting.getNumberDistricts();
+    }
 
 }

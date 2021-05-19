@@ -185,6 +185,14 @@ public class DistrictingController {
         return districtingSummaryRepository.findById(districtingId).orElse(null);
     }
 
+    @GetMapping("/districtings/{districtingId}/total-population")
+    public Integer getTotalPopulation(@PathVariable Long districtingId) {
+
+        return districtingRepository.findById(districtingId)
+                .orElseThrow()
+                .getTotalPopulation(PopulationType.TOTAL_POPULATION);
+    }
+
 //    TODO: session not available.
 //    @GetMapping("/districtings/{districtingId}")
 //    public Districting getDistrictingById(HttpSession httpSession, @PathVariable Long districtingId) {
